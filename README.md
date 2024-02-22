@@ -1,2 +1,2 @@
-#PySEMR
-Python Synthetic Electronic Medical Records
+# PySEMR
+Python Expedientes Clínicos Electrónicos Sintéticos
