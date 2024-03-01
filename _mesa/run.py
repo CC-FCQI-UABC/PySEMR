@@ -6,14 +6,14 @@ from patient_data import RegistroModel
 user_model = UserModel()
 
 # Agregar usuarios aleatorios
-for _ in range(5):
+for _ in range(10000):
     user_model.agregar_usuario_aleatorio()
 
 # Crear instancia de RegistroModel
 registro_model = RegistroModel()
 
 # Agregar registros médicos aleatorios
-for _ in range(5):
+for _ in range(10000):
     registro_model.agregar_registro_aleatorio()
 
 # Specify directory for CSV files
