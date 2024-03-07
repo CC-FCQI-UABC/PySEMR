@@ -1,0 +1,523 @@
+12
+12 De Octubre
+13
+13 Ayuntamiento
+13 De Septiembre
+16
+16 De Septiembre
+17
+18 De Julio
+18 De Marzo
+20 De Noviembre
+21 De Marzo
+24 De Febrero
+26 De Marzo
+2 De Octubre
+5 De Febrero
+5 De Mayo
+8 De Mayo
+A
+Acatzingo
+Acoculco
+Adolfo De La Huerta
+Agua Fría
+Aguaje
+Aguamarina
+Aguascalientes
+Águila
+Agustín De Iturbide
+Agustín Escudero
+Agustín Melgar
+Álamos
+Alberto V. Aldrete
+Alcatraz
+Aldrete
+Alisos
+Almacenes Nacionales
+Aluminio
+Álvaro Obregón
+Amalia Aguilera
+Amaya
+Anáhuac Este
+Anáhuac Norte
+Anáhuac Sur
+Ana Sepúlveda
+Andalucía
+Anita Muñoz
+Antonio Díaz
+Antonio Medisvolio
+Antonio Villarreal
+Apatzingán
+Aquiles Serdán
+Arcadio Anaya
+Artículo Tercero
+B
+Baja California
+Balancum
+Barcelona
+Baylón Chacón
+Belisario Domínguez
+Benito Juárez
+Betiz
+Bondad
+Bronce
+Bugambilias
+Bugambilias (Paseo Acueducto)
+Burócrata
+Burócratas
+C
+Cachan
+California
+Campeche
+Canadá
+Cantabranas
+Carapan
+Carecuaro
+Carlos Salinas De Gortari
+Carmen Serdán
+Carranza
+Cascada
+Cedros
+Cenzontle
+Cerro Azul
+Cerro Colorado
+Cerro Cuchumá
+Cerro De Las Abejas
+Cerro San Javier
+Chapultepec
+Chihuahua
+Churubusco
+Circunvalación
+Coahuayana
+Coahuila
+Coalcomán
+Coatzacoalcos
+Cochimí
+Cocoyoc
+Cofradía
+Cojumatlán
+Colima
+Constitución
+Coral Negro
+Corregidora
+Coyuca
+Cuarta
+Cucapah
+Cuchuma
+Cuenca Díaz
+Cuitláhuac
+Cuitzeo
+Culiacán
+D
+Décima
+Décima Tercera
+De Cuota
+Del Agua
+De La Lluvia
+De Las Flores
+De Las Margaritas
+De Las Montañas
+De Las Palmas
+De Las Rosas (Quetzalcóatl)
+Del Bosque
+Del Fresno
+Del Lago
+De Los Árboles
+De Los Encinos
+De Los Olivos
+De Los Rosas
+Del Río
+Del Roble
+Del Técnico Profesional
+Del Túnel
+De Servicio
+Diamante
+Doceava
+Doctor Arturo Guerra F.
+Dolores López
+Domingo Canche
+Durazno
+E
+El Aguaje
+El Arenal
+Electa
+Electricista
+El Faisán
+Elías s
+El Manantial
+El Mayab
+Eloiza Salazar
+El Quetzal
+El Venado
+Emiliano Zapata
+Encino
+Encinos
+Ensenada
+Escobedo
+Escudero Sandoval
+Esmeralda
+Esteban Cantú
+Estrada Arreguin
+Eufracio Santana
+Eulalia Valencia
+Ezequiel Rodríguez Arce
+F
+Federico Benítez
+Feliciano Hernández Javier
+Felipe Ángeles
+Fernando Montes De Oca
+Ff.cc.
+Flores
+Francisco I. Madero
+Francisco León De La Barra
+Francisco Márquez
+Francisco Villa
+Francisco Zarco
+Fresas
+Fresno
+G
+General Abraham Agreda
+General Arista
+General Emilio Portes Gil
+General Francisco Villa
+General Francisco Zarco
+General José Herrera
+General Manuel González
+General Mariano Arista
+General Marino Arista
+General Pedro María Anaya
+General Porfirio Díaz
+General Sánchez Taboada
+Gertrudis Bocanegra
+Gilberto Cortez
+Girbau
+Granada
+Guadalajara
+Guadalupe Cadena
+Guadalupe Victoria
+Guanajuato
+Guaycura (Carlos González)
+Guillermo Prieto
+H
+Heriberto Jara
+Hermenegildo Galeana
+Hermosillo
+Hierro
+Honduras
+Huetamo
+Ignacio Comonfort
+Ignacio Zaragoza
+Independencia
+Irapuato
+Jacarandas
+Jacume
+Jalisco
+Janitzio
+Jaras
+Jarritos
+Jesús González
+Jiquilpan
+Jorge Cruisckshank
+Josefa Ortiz De Domínguez
+Josefina Rendón
+José María Morelos
+José María Morelos Y Pavón
+José María Pino Suárez
+José María Villanueva
+José Sabas Márquez
+Juan Álvarez
+Juan Campos
+Juan De La Barrera
+Juan Domínguez
+Juan Escutia
+Juan Sepúlveda
+Kiwi
+Kumai
+L
+La Ciénega
+La Escondida
+Lago Texcoco
+La Paz
+La Piedad
+La Rinconada
+Las Cumbres
+Las Flores
+Las Jaras
+Las Piedras
+Laureles
+Lázaro Cárdenas
+Lázaro Rubio Félix
+Leandro Valle
+Leona Vicario
+Lerdo González
+Lerma
+Ley Del Seguro Social
+Libertad
+Licenciado José Estrada Arreguin
+Lima
+Limones
+Lirios
+Loreto
+Los Encinos
+Los Maestros
+Lucio Blanco
+Luis Donaldo Colocio
+Luis Donaldo Colosio Murrieta
+Madrid
+Maestros
+Magnolia
+Magnolias
+Málaga
+Manelich
+Manganeso
+Mangle
+Manuel Bello
+Maple
+Marbella
+Marbuata
+Margaritas
+Mariano Abasolo
+Mariano Escobedo
+Marqueza
+Matamoros
+Matías Romero
+Melchor Ocampo
+Mercado Municipal
+Mérida
+Mexicali
+Michoacán
+Miguel Hernández
+Miguel Hidalgo
+Miguel Hidalgo Y Costilla
+Militares
+Mirador
+Miraflores
+Misión De Guadalupe
+Misión De José De Comandu
+Misión Del Carmen
+Misión De Loreto
+Misión De Monserrat
+Misión De Mulegé
+Misión De San Diego
+Misión De San Fernando
+Misión De San Ignacio
+Misión De San José Del Cabo
+Misión De Santa Gertrudis
+Misión De Santa Rosalía
+Misión De Santa Teresa
+Misión De Santo Domingo
+Misión De Santo Tomás
+Misión San Ángel
+Misión San Ignacio
+Misión San Luis Gonzaga
+Mixcoac
+Monterrey
+Morelia
+Naranjo
+Naranjos
+Narciso Mendoza
+Nayarit
+Neji
+Nicolás Bravo
+Nigromante
+Ninguno
+Niños Héroes
+Nuevo León
+Oaxaca
+Obrero Mundial
+Octava
+Ojo De Agua
+Ojos Negros
+Olivo
+Olivos
+Oro
+Orquídeas
+Oscar Baylón Chacón (Defensores De Baja California)
+Oscar Baylón (Defensores De Baja California)
+Pai Pai
+Paracho
+Parácuaro
+Paracutín
+Paralelo 28
+Paricutín
+Pascual Orozco
+Paseo De La Juventud
+Paseo De Las Águilas Este
+Paseo De Las Águilas Oeste
+Paseo Del Florido
+Paseo José María Morelos Y Pavón
+Paseo M. De Todos Los Santos
+Paseo Río Tecate Norte
+Paseo Río Tecate Sur
+Patambaro
+Patria
+Pátzcuaro
+Pau Pau
+Pedregal
+Pedro María Anaya
+Pedro Moreno
+Pericue
+Perlas
+Piedra Del Sol
+Pirul
+Plata
+Platino
+Poliducto Pemex
+Popotla
+Presidente Abelardo L. Rodríguez
+Presidente Adolfo De La Huerta
+Presidente Adolfo López Mateos
+Presidente Álvaro Obregón
+Presidente Emilio Portes Gil
+Presidente Lázaro Cárdenas
+Presidente Pascual Ortiz Rubio
+Presidente Plutarco Elías s
+Presidente Venustiano Carranza
+Primera
+Primera (Insurgentes)
+Primero De Enero
+Primero De Marzo
+Primero De Mayo
+Principal
+Profesor Joaquín Durazo Miranda (15)
+Profesor José Amador (18)
+Profesor José Gutiérrez Durán
+Puebla
+Querétaro
+Quinta
+Quinta Herminia
+Quintana Roo
+Rafael López
+Ramón Salazar
+Reforma
+República De Argentina
+República De Belice
+República De Brasil
+República De Chile
+República De Colombia
+República De Ecuador
+República De Guatemala
+República De Panamá
+República De Uruguay
+Revolución
+Revolución Mexicana
+Ricardo Flores Magón
+Rincón
+Río Amazonas
+Río Armerias
+Río Armón
+Río Balsas
+Río Bravo
+Río Casas Grandes
+Río Colorado
+Río Conchos
+Río Escondido
+Río Grijalva
+Río Hion
+Río Lerma
+Río Mayo
+Río Nilo
+Río Pánuco
+Río Papaloapan
+Río Pizon
+Río Sahuapan
+Río San Lorenzo
+Río Santiago
+Río Sered
+Río Sizon
+Río Támesis
+Río Tecate
+Río Tijuana
+Río Usumacinta
+Río Yaqui
+Roble
+Roca Grande
+Roque González Garza
+Rosa Sandoval
+Rosa Yolanda Escudero
+Rubí
+Sahuaro
+Saltillo
+San Agustín
+San Alberto
+San Bartolo
+Sánchez Taboada
+San Cristóbal
+San Daniel
+San Juan
+San Lorenzo
+San Martín
+San Pedro
+San Pedro (Del Roble)
+San Pedro Y/o Del Roble
+Santa Ana
+Santa Catalina
+Santa Cecilia
+Santa Gertrudis
+Santa Inés
+Santa Irma
+Santa Lucía
+Santa María
+Santa Mónica
+Santander
+Santa Rosa
+Santa Teresa
+Santos Degollado
+Santo Tomás
+San Valentín
+San Vicente
+Sebastián Lerdo De Tejada
+Segunda
+Séptima
+Séptimo Ayuntamiento
+Servicio De Paso
+Sevilla
+Sexta
+Sinaloa
+Solidaridad
+Sonora
+Tabasco
+Tacintaro
+Tamaulipas
+Tanama
+Tancintaro
+Tecate
+Tenochtitlan
+Tepalcatepec
+Tepic
+Tercera
+Tezozómoc
+Tezuitlan
+Tierra Blanca
+Tierra Y Libertad
+Tijuana
+Tlalpan
+Toledo
+Toluca
+Topacio
+Torreón
+Trimbo
+Tugsteno
+Tupitinga
+Turquesa (General Álvaro Obregón)
+Undécima
+Universidad
+Uruapan
+Valladolid
+Vanguardia Territorial
+Venustiano Carranza
+Veracruz
+Vicente Guerrero
+Vicente Lomardo Toledano
+Vicente Suárez
+Xalpa
+Xicoténcatl
+Xochimilco
+Yucatán
+Yurécuaro
+Zacapu
+Zacatecas
+Zafiro
+Zamora
+Zinapécuaro
+Zitácuaro

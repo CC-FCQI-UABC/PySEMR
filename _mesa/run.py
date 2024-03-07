@@ -5,16 +5,17 @@ from patient_data import RegistroModel
 # Crear instancia de UserModel
 user_model = UserModel()
 
-# Agregar usuarios aleatorios
-for _ in range(10000):
-    user_model.agregar_usuario_aleatorio()
-
 # Crear instancia de RegistroModel
 registro_model = RegistroModel()
 
+# Agregar usuarios aleatorios
+for i in range(10):
+    user_model.agregar_usuario_aleatorio()
+    for j in range(10):
+        registro_model.agregar_registro_aleatorio(user_model.users[i])
+
+
 # Agregar registros médicos aleatorios
-for _ in range(10000):
-    registro_model.agregar_registro_aleatorio()
 
 # Specify directory for CSV files
 directory = "_mesa"
@@ -23,7 +24,7 @@ directory = "_mesa"
 with open(directory + 'user_data.csv', 'w', newline='') as csvfile:
     csv_writer = csv.writer(csvfile)
     for usuario in user_model.users:
-        csv_writer.writerow([
+        csv_writer.writerow([usuario.id,
             usuario.uuid, usuario.username, usuario.password, usuario.authorized, usuario.info,
             usuario.source, usuario.fname, usuario.mname, usuario.lname, usuario.suffix,
             usuario.federaltaxid, usuario.federaldrugid, usuario.upin, usuario.facility,
@@ -45,8 +46,8 @@ with open(directory + 'registro_data.csv', 'w', newline='') as csvfile:
     csv_writer = csv.writer(csvfile)
     for registro in registro_model.registros:
         csv_writer.writerow([
-            registro.unique_id, registro.uuid, registro.title, registro.language, registro.financial,
-            registro.fname, registro.lname, registro.mname, registro.DOB, registro.street,
+            registro.id, registro.uuid, registro.title, registro.language, registro.financial,
+            registro.fname, registro.mname, registro.lname, registro.DOB, registro.street,
             registro.postal_code, registro.city, registro.state, registro.country_code,
             registro.drivers_license, registro.ss, registro.occupation, registro.phone_home,
             registro.phone_biz, registro.phone_contact, registro.phone_cell, registro.pharmacy_id,
