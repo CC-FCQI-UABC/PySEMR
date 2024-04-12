@@ -1,6 +1,7 @@
 from mesa import Agent, Model
 from mesa.time import RandomActivation
 import uuid
+import datetime
 from faker import Faker
 from funciones import randomizer, numeroTelefono, googleSigninMail, callesBC, licenciaConducir
 
@@ -79,7 +80,7 @@ class User(Agent):
         self.supervisor_id = ""
         self.billing_facility = ""
         self.billing_facility_id = ""
-        
+        self.DOB = fake.date_of_birth(minimum_age  = 20, maximum_age = 80)
         self.gender = random.choice(["male", "female", "non-binary"])
         
         if self.gender == "male":

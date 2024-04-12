@@ -1,21 +1,21 @@
 import csv
 from user import UserModel
-from patient_data import RegistroModel
+from patient_data import PatientModel
 
 # Crear instancia de UserModel
 user_model = UserModel()
 
-# Crear instancia de RegistroModel
-registro_model = RegistroModel()
+# Crear instancia de patientModel
+patient_model = PatientModel()
 
 # Agregar usuarios aleatorios
 for i in range(10):
     user_model.agregar_usuario_aleatorio()
     for j in range(10):
-        registro_model.agregar_registro_aleatorio(user_model.users[i])
+        patient_model.agregar_patient_aleatorio(user_model.users[i])
 
 
-# Agregar registros médicos aleatorios
+# Agregar patients médicos aleatorios
 
 # Specify directory for CSV files
 directory = "_mesa"
@@ -41,15 +41,15 @@ with open(directory + 'user_data.csv', 'w', newline='') as csvfile:
             usuario.billing_facility, usuario.billing_facility_id
         ])
 
-# Guardar datos de RegistroModel en un archivo CSV
-with open(directory + 'registro_data.csv', 'w', newline='') as csvfile:
+# Guardar datos de patientModel en un archivo CSV
+with open(directory + 'patient_data.csv', 'w', newline='') as csvfile:
     csv_writer = csv.writer(csvfile)
-    for registro in registro_model.registros:
+    for patient in patient_model.patients:
         csv_writer.writerow([
-            registro.id, registro.uuid, registro.title, registro.language, registro.financial,
-            registro.fname, registro.mname, registro.lname, registro.DOB, registro.street,
-            registro.postal_code, registro.city, registro.state, registro.country_code,
-            registro.drivers_license, registro.ss, registro.occupation, registro.phone_home,
-            registro.phone_biz, registro.phone_contact, registro.phone_cell, registro.pharmacy_id,
-            registro.status, registro.contact_relationship, registro.date, registro.sex
+            patient.id, patient.uuid, patient.title, patient.language, patient.financial,
+            patient.fname, patient.mname, patient.lname, patient.DOB, patient.street,
+            patient.postal_code, patient.city, patient.state, patient.country_code,
+            patient.drivers_license, patient.ss, patient.occupation, patient.phone_home,
+            patient.phone_biz, patient.phone_contact, patient.phone_cell, patient.pharmacy_id,
+            patient.status, patient.contact_relationship, patient.date, patient.sex
         ])

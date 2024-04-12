@@ -10,7 +10,7 @@ from funciones import randomizer, numeroTelefono
 
 fake = Faker('es_MX')
 
-class RegistroMedico(Agent):
+class PatientData(Agent):
     def __init__(self, model, user):
         super().__init__(self, model)
         self.id = 0
@@ -21,7 +21,7 @@ class RegistroMedico(Agent):
         self.fname = user.fname
         self.mname = user.mname
         self.lname = user.lname
-        self.DOB = fake.date_of_birth()
+        self.DOB = user.DOB
         self.street = user.street
         self.postal_code = user.zip
         self.city = user.city
@@ -43,18 +43,18 @@ class RegistroMedico(Agent):
     def step(self):
         pass
 
-class RegistroModel(Model):
+class PatientModel(Model):
     def __init__(self):
         super().__init__()
         self.schedule = RandomActivation(self)
-        self.registros = []
+        self.patients = []
 
     def step(self):
         self.schedule.step()
 
-    def agregar_registro_aleatorio(self, user):
-        registro = RegistroMedico(self, user)
-        registro.id = len(self.registros) + 1
-        self.schedule.add(registro)
-        self.registros.append(registro)
+    def agregar_patient_aleatorio(self, user):
+        patient = PatientData(self, user)
+        patient.id = len(self.patients) + 1
+        self.schedule.add(patient)
+        self.patients.append(patient)
         self.schedule.step()
