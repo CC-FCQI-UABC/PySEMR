@@ -1,0 +1,15 @@
+Religion fuentes:
+https://cuentame.inegi.org.mx/monografias/informacion/bc/poblacion/diversidad.aspx#:~:text=En%202020%20en%20Baja%20California%2C%2062.0%20%25%20de,las%20personas%20sin%20religi%C3%B3n%20con%2019.0%20por%20ciento.
+
+Family_size fuentes:
+https://www.medigraphic.com/pdfs/salpubmex/sal-2010/sal103h.pdf
+
+Monthly_income fuentes:
+"El ingreso corriente promedio trimestral por hogar en 2022 en Baja California resultó en 88 912 pesos."
+88 912 / 3 = 29637
+https://www.inegi.org.mx/contenidos/programas/enigh/nc/2022/doc/enigh2022_ns_presentacion_resultados_bc.pdf
+
+sexual_orientation y
+gender_identity fuentes:
+https://www.inegi.org.mx/contenidos/saladeprensa/boletines/2022/endiseg/Resul_Endiseg21.pdf
+

@@ -51,12 +51,12 @@ class User(Agent):
         self.streetb = "" #Dejar en vacio?
         self.city = randomizer.randomize('municipios.txt')
         self.state = "Baja California"
-        self.zip = randomizer.randomize('codigos_postales_bc.txt')
+        self.zip = None
         self.street2 = "" #Dejar en vacio?
         self.streetb2 = "" #Dejar en vacio?
         self.city2 = "" #Dejar en vacio?
         self.state2 = "" #Dejar en vacio?
-        self.zip2 = randomizer.randomize('codigos_postales_bc.txt')
+        self.zip2 = ""
         self.phone = numeroTelefono.numeroTelefono(7, self.city)
         self.fax = ""
         self.phonew1 = numeroTelefono.numeroTelefono(7, self.city)
@@ -69,7 +69,7 @@ class User(Agent):
         self.abook_type = ""
         self.default_warehouse = ""
         self.irnpool = ""
-        self.state_license_number = licenciaConducir.licencia()
+        self.state_license_number = ""
         self.weno_prov_id = ""
         self.newcrop_user_role = ""
         self.cpoe = ""
@@ -80,7 +80,7 @@ class User(Agent):
         self.supervisor_id = ""
         self.billing_facility = ""
         self.billing_facility_id = ""
-        self.DOB = fake.date_of_birth(minimum_age  = 20, maximum_age = 80)
+        self.DOB = ""
         self.gender = random.choice(["male", "female", "non-binary"])
         
         if self.gender == "male":

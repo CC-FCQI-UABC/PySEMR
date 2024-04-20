@@ -8,17 +8,19 @@ def numeroTelefono(cantidad_digitos, ciudad):
     return numTelefono
 
 def ladas(case):
-    if case == "Ensenada": 
+    if case == "Ensenada" or case == "ENSENADA": 
         return "(646)"
-    elif case == "Tijuana": 
+    elif case == "Tijuana" or case ==  "TIJUANA": 
         return "(664)"
-    elif case == "Mexicali": 
+    elif case == "Mexicali" or case ==  "MEXICALI": 
         return "(686)"
-    elif case == "Tecate": 
+    elif case == "Tecate" or case ==  "TECATE": 
         return "(665)"
-    elif case == "Playas de Rosarito": 
+    elif case == "Playas de Rosarito" or case ==  "PLAYAS DE ROSARITO": 
         return "(661)"
-    elif case =="San Quintín": 
+    elif case =="San Quintín" or case ==  "SAN QUINTÍN" or case ==  "SAN QUINTIN": 
         return "(616)"
-    elif case == "San Felipe": 
+    elif case == "San Felipe" or case ==  "SAN FELIPE": 
         return "(686)"
+    elif case =="Valle de Las Palmas" or case == "Valle de Las Palmas":
+        return "(665)"#
