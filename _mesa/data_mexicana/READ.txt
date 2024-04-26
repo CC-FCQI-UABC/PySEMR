@@ -1,3 +1,6 @@
+Nombres hombres y mujeres fuentes:
+https://cuentame.inegi.org.mx/poblacion/natalidad.aspx?tema=P
+
 Religion fuentes:
 https://cuentame.inegi.org.mx/monografias/informacion/bc/poblacion/diversidad.aspx#:~:text=En%202020%20en%20Baja%20California%2C%2062.0%20%25%20de,las%20personas%20sin%20religi%C3%B3n%20con%2019.0%20por%20ciento.
 

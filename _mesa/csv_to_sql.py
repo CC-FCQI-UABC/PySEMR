@@ -150,41 +150,53 @@ ALTER TABLE `mesapatient_data`
 --
 -- AUTO_INCREMENT de las tablas volcadas
 --
+DELIMITER //
+CREATE TRIGGER `generate_uuid` BEFORE INSERT ON `mesapatient_data`
+FOR EACH ROW
+BEGIN
+    SET NEW.uuid = UNHEX(REPLACE(UUID(), '-', ''));
+END;
+//
+DELIMITER ;
+
 
 --
 -- AUTO_INCREMENT de la tabla `mesapatient_data`
 --
 ALTER TABLE `mesapatient_data`
-  MODIFY `id` bigint NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` bigint NOT NULL AUTO_INCREMENT;
 COMMIT;
 """
-    with open(output_file, 'w') as output:
+    # Escribir la creación de la tabla SQL en el archivo de salida
+    with open(output_file, 'w', encoding='utf8') as output:
         output.write(create_table_sql)
 
+    # Leer las columnas de la primera línea del archivo CSV
     with open(csv_file, 'r', encoding='utf-8-sig') as file:
         reader = csv.reader(file)
         columns = next(reader)
 
+    # Limpiar los nombres de las columnas si es necesario
     columns = [remove_bom(column) for column in columns]
 
+    # Preparar SQL para insertar datos
     insert_into_sql = f"INSERT INTO {table_name} (`" + "`, `".join(columns) + "`) VALUES\n"
     with open(csv_file, 'r', encoding='utf-8-sig') as file:
         reader = csv.reader(file)
-        next(reader)
+        next(reader)  # Saltar la fila de encabezado
         rows = []
         for row in reader:
             row_values = []
             for column, value in zip(columns, row):
-                if column in ['pharmacy_id']:
-                    row_values.append(value)
-                else:
-                    row_values.append(f"'{value}'")
+                # Escapar comillas simples en los valores
+                value = value.replace("'", "''")
+                row_values.append(f"'{value}'")
             row_str = ', '.join(row_values)
             rows.append(f"({row_str})")
         insert_into_sql += ",\n".join(rows) + ";"
 
-    # Write to output file
-    with open(output_file, 'a') as output:
+    # Agregar el SQL de inserción al archivo de salida
+    with open(output_file, 'a', encoding='utf8') as output:
         output.write("\n\n" + insert_into_sql)
 
 csv_file = '_mesapatient_data.csv'
@@ -192,4 +204,4 @@ table_name = 'mesapatient_data'
 output_file = 'mesapatient_data_sql_script.sql'
 
 csv_to_mysql(csv_file, table_name, output_file)
-print("SQL script has been written to", output_file)
+print("El script SQL se ha escrito en", output_file)

@@ -1,7 +1,18 @@
 import csv
-from user import UserModel
+import sys
+import os
+
+# Añadir el directorio padre al sys.path para importar UserModel
+directorio_padre = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+if directorio_padre not in sys.path:
+    sys.path.append(directorio_padre)
+
+from user import UserModel  # Ahora puedes importar desde el directorio padre
 from patient_data import PatientModel
 from domicilios_data import domiciliosData
+from ambiente import Environment
+from enfermedad import Enfermedad
+import time
 
 # Crear instancia de UserModel
 user_model = UserModel()
@@ -9,19 +20,38 @@ user_model = UserModel()
 # Crear instancia de patientModel
 patient_model = PatientModel()
 
+environment = Environment()
+
 # Creamos instancia de domicilios_data
 domicilios = domiciliosData()
 
 domicilios.get_data()
 counter = 0
-# Agregar usuarios aleatorios
-for i in range(50000):
-    counter += 1
-    if counter % 100 == 0:
-        print(f"Se han agregado {counter} pacientes.")
-    patient_model.agregar_patient_aleatorio(domicilios)
 
-# Agregar patients médicos aleatorios
+# Define una lista de posibles enfermedades
+possible_diseases = [
+    Enfermedad("Gripe", 0.2, ["Invierno", "Otoño"]),
+    Enfermedad("Resfriado", 0.15, ["Invierno", "Primavera"]),
+    Enfermedad("COVID-19", 0.1, ["Invierno", "Primavera", "Verano", "Otoño"]),
+    # Agrega más enfermedades según sea necesario
+]
+
+
+# Agregar usuarios aleatorios
+for day in range(365):  # Simular un año
+    print(f"Día {day + 1}")
+
+    # Simular cambios estacionales y de tráfico
+    environment.simulate_season_change()
+    environment.simulate_traffic()
+
+    # Generar pacientes aleatorios para este día
+    for _ in range(137):  # Por ejemplo, generar 100 pacientes nuevos al día
+        patient_model.agregar_patient_aleatorio(domicilios)
+
+    # Llamar al método step() de cada paciente para simular su comportamiento
+    for patient in patient_model.patients:
+        patient.step(environment, possible_diseases)
 
 # Specify directory for CSV files
 directory = "_mesa"
