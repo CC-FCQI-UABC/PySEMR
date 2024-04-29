@@ -1,13 +1,4 @@
-import sys
-import os
-
-# Añadir el directorio padre al sys.path para importar UserModel
-directorio_padre = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-if directorio_padre not in sys.path:
-    sys.path.append(directorio_padre)
-
-from user import UserModel  # Ahora puedes importar desde el directorio padre
-
+#ambiente.py
 import random
 
 class Environment:

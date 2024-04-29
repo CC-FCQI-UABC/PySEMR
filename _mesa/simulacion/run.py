@@ -1,21 +1,8 @@
-import csv
-import sys
-import os
-
-# Añadir el directorio padre al sys.path para importar UserModel
-directorio_padre = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-if directorio_padre not in sys.path:
-    sys.path.append(directorio_padre)
-
-from user import UserModel  # Ahora puedes importar desde el directorio padre
-from patient_data import PatientModel
+from patient_model import PatientModel
 from domicilios_data import domiciliosData
 from ambiente import Environment
 from enfermedad import Enfermedad
 import time
-
-# Crear instancia de UserModel
-user_model = UserModel()
 
 # Crear instancia de patientModel
 patient_model = PatientModel()

@@ -1,4 +1,4 @@
-# from funciones import randomizer
+from funciones import randomizer
 import random
 from faker import Faker
 
