@@ -1,0 +1,7 @@
+Soltero
+Casado
+Divorciado
+Viudo
+Unión Libre
+Separado
+Separado Legalmente

@@ -1,18 +1,8 @@
-import csv
-import sys
-import os
-
-from datos_paciente import *
-
-from user import UserModel  # Ahora puedes importar desde el directorio padre
-from patient_data import PatientModel
+from patient_model import PatientModel
 from domicilios_data import domiciliosData
 from ambiente import Environment
 from enfermedad import Enfermedad
 import time
-
-# Crear instancia de UserModel
-user_model = UserModel()
 
 # Crear instancia de patientModel
 patient_model = PatientModel()
@@ -71,13 +61,14 @@ with open(directory + 'patient_data.csv', 'w', newline='') as csvfile:
     # Escribir los datos de los pacientes
     for patient in patient_model.patients:
         csv_writer.writerow([
-            patient.language, 
-            patient.fname, patient.mname, patient.lname, patient.DOB, patient.street,
-            patient.postal_code, patient.city, patient.state, patient.country_code,
-            patient.drivers_license, patient.ss, patient.occupation, patient.phone_home,
-            patient.phone_biz, patient.phone_contact, patient.phone_cell,
-            patient.status, patient.contact_relationship, patient.date, patient.sex, patient.email, 
-            patient.email_direct, patient.ethnoracial, patient.race, patient.ethnicity, patient.religion, 
-            patient.family_size, patient.monthly_income, patient.homeless, patient.pid, patient.county, 
-            patient.sexual_orientation, patient.gender_identity, patient.street_line_2, patient.preferred_name, patient.nationality_country
+            patient.personal_data.language, 
+            patient.name_data.fname, patient.name_data.mname, patient.name_data.lname, patient.personal_data.DOB, 
+            patient.address_data.street, patient.address_data.postal_code, patient.address_data.city, patient.address_data.state, 
+            patient.address_data.country_code, patient.personal_data.drivers_license, patient.personal_data.ss, patient.personal_data.occupation, 
+            patient.contact_data.phone_home, patient.contact_data.phone_biz, patient.contact_data.phone_contact, patient.contact_data.phone_cell,
+            patient.personal_data.status, patient.personal_data.contact_relationship, patient.personal_data.date, patient.personal_data.sex, 
+            patient.contact_data.email, patient.contact_data.email_direct, patient.personal_data.ethnoracial, patient.personal_data.race, patient.personal_data.ethnicity, 
+            patient.personal_data.religion, patient.personal_data.family_size, patient.personal_data.monthly_income, patient.personal_data.homeless, patient.personal_data.pid, 
+            patient.personal_data.county, patient.personal_data.sexual_orientation, patient.personal_data.gender_identity, patient.address_data.street_line_2, 
+            patient.name_data.preferred_name, patient.personal_data.nationality_country
         ])
