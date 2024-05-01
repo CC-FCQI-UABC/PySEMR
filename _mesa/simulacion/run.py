@@ -1,8 +1,16 @@
+import csv
+import sys
+import os
+
 from patient_model import PatientModel
 from domicilios_data import domiciliosData
 from ambiente import Environment
 from enfermedad import Enfermedad
 import time
+
+
+# Crear instancia de UserModel
+user_model = UserModel()
 
 # Crear instancia de patientModel
 patient_model = PatientModel()

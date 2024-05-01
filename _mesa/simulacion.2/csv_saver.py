@@ -1,13 +1,13 @@
 import csv
 import os
 
-def save_data_to_csv(patients):
-    directory = "_mesa"
+def save_data_to_csv(patients, nombre_archivo):
+    directory = "PySEMR/_mesa/simulacion.2/patient_data"
     # Asegúrate de que el directorio existe
     os.makedirs(directory, exist_ok=True)
 
     # Guardar datos de patientModel en un archivo CSV
-    with open(os.path.join(directory, 'patient_data.csv'), 'w', newline='') as csvfile:
+    with open(os.path.join(directory, nombre_archivo + '.csv'), 'w', newline='') as csvfile:
         csv_writer = csv.writer(csvfile)
         csv_writer.writerow([
             "language", "fname", "mname", "lname",

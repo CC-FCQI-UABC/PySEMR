@@ -18,12 +18,9 @@ class PatientData(Agent):
         self.address_data = AddressData(domicilios_data)
         self.contact_data = ContactData(self.address_data.city)
         self.diseases_contracted = []
-        self.sick_status = False
 
     def step(self):
-        for disease in self.model.possible_diseases:
-            if disease.calculate_probability(self.model.environment.temperature, self.model.environment.season):
-                if random.random() < disease.calculate_probability(self.model.environment.temperature, self.model.environment.season):
+        for disease in possible_diseases:
+            if disease.calculate_probability(environment.temperature, environment.season):
+                if random.random() < disease.calculate_probability(environment.temperature, environment.season):
                     self.diseases_contracted.append(disease.nombre)
-                    self.sick_status = True
-                    self.model.enfermos.append(self)

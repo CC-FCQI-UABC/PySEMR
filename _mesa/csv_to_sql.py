@@ -1,4 +1,5 @@
 import csv
+import os
 
 def remove_bom(s):
     return s.replace('\ufeff', '')
@@ -167,19 +168,17 @@ ALTER TABLE `mesapatient_data`
   MODIFY `id` bigint NOT NULL AUTO_INCREMENT;
 COMMIT;
 """
-    # Escribir la creación de la tabla SQL en el archivo de salida
+    directory = "PySEMR/_mesa/patient_data"
+
     with open(output_file, 'w', encoding='utf8') as output:
         output.write(create_table_sql)
 
-    # Leer las columnas de la primera línea del archivo CSV
     with open(csv_file, 'r', encoding='utf-8-sig') as file:
         reader = csv.reader(file)
         columns = next(reader)
 
-    # Limpiar los nombres de las columnas si es necesario
     columns = [remove_bom(column) for column in columns]
 
-    # Preparar SQL para insertar datos
     insert_into_sql = f"INSERT INTO {table_name} (`" + "`, `".join(columns) + "`) VALUES\n"
     with open(csv_file, 'r', encoding='utf-8-sig') as file:
         reader = csv.reader(file)
@@ -199,9 +198,9 @@ COMMIT;
     with open(output_file, 'a', encoding='utf8') as output:
         output.write("\n\n" + insert_into_sql)
 
-csv_file = '_mesapatient_data.csv'
+csv_file = 'PySEMR/_mesa/simulacion.2/patient_data/patient_data.csv'
 table_name = 'mesapatient_data'
-output_file = 'mesapatient_data_sql_script.sql'
+output_file = 'PySEMR/_mesa/simulacion.2/patient_data/mesapatient_data_sql_script.sql'
 
 csv_to_mysql(csv_file, table_name, output_file)
 print("El script SQL se ha escrito en", output_file)
