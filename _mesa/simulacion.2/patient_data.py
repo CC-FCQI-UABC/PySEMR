@@ -10,12 +10,12 @@ from datos_paciente.address_data import AddressData
 
 # patient_data.py
 class PatientData(Agent):
-    def __init__(self, model, domicilios_data, pid):
+    def __init__(self, model, pacientes_data, pid):
         super().__init__(pid, model)
-        self.personal_data = PersonalData(pid)
-        self.name_data = NameData(self.personal_data.sex)
-        self.address_data = AddressData(domicilios_data)
-        self.contact_data = ContactData(self.address_data.city)
+        self.personal_data = PersonalData(pacientes_data, pid)
+        self.name_data = NameData(pacientes_data, pid)
+        self.address_data = AddressData(pacientes_data, pid)
+        self.contact_data = ContactData(pacientes_data, pid)
         self.diseases_contracted = []
         self.sick_status = False
 

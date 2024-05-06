@@ -9,26 +9,26 @@ import datetime
 fake = Faker('es_MX')
 
 class PersonalData:
-    def __init__(self, pid):
-        self.language = "Español"
-        self.DOB = fake.date_of_birth(minimum_age  = 20, maximum_age = 80)
-        self.sex = random.choice(["Female", "Male", "Rather not say"])
-        self.ss = fake.ssn()
-        self.drivers_license = licenciaConducir.licencia()
-        self.occupation = fake.job()
-        self.status = randomizer.randomize('estadoCivil.txt')
-        self.contact_relationship = ""
-        self.date = fake.date_between(datetime.date(2000, 1, 1))
-        self.ethnoracial = random.choice(["Caucásica/o", "Mestiza/o", "Indígena", "Afrodescendiente"])
-        self.race = self.ethnoracial
-        self.ethnicity = self.race
-        self.religion = random.choice(["Católica", "Protestante/Cristiano evangélico", "Otras religiones", "Sin adscripción religiosa (creyente)", "Sin religión"])
-        self.family_size = random.choice(["Tres", "Cuatro", "Cinco"])
-        self.monthly_income = "29637"
-        self.homeless = random.choice(["Falso", "Verdadero"])
-        self.pid = pid
+    def __init__(self, pacientes_data, pid):
+        self.language = pacientes_data['data'][pid]["language"]
+        self.DOB = pacientes_data['data'][pid]["DOB"]
+        self.sex = pacientes_data['data'][pid]["sex"]
+        self.ss = pacientes_data['data'][pid]["ss"]
+        self.drivers_license = pacientes_data['data'][pid]["drivers_license"]
+        self.occupation = pacientes_data['data'][pid]["occupation"]
+        self.status = pacientes_data['data'][pid]["status"]
+        self.contact_relationship = pacientes_data['data'][pid]["contact_relationship"]
+        self.date = pacientes_data['data'][pid]["date"]
+        self.ethnoracial = pacientes_data['data'][pid]["ethnoracial"]
+        self.race = pacientes_data['data'][pid]["race"]
+        self.ethnicity = pacientes_data['data'][pid]["ethnicity"]
+        self.religion = pacientes_data['data'][pid]["religion"]
+        self.family_size = pacientes_data['data'][pid]["family_size"]
+        self.monthly_income = pacientes_data['data'][pid]["monthly_income"]
+        self.homeless = pacientes_data['data'][pid]["homeless"]
+        self.pid = pacientes_data['data'][pid]["pid"]
         self.county = "Tijuana"
-        self.sexual_orientation = random.choice(["Straight or heterosexual", "Lesbian, gay or homosexual", "Bisexual", "Something else, please describe"])
-        self.gender_identity = random.choice(["Identifies as Male", "Identifies as Female", "Female-to-Male (FTM)/Transgender Male/Trans Man", "Male-to-Female (MTF)/Transgender Female/Trans Woman", "Genderqueer, neither exclusively male nor female", "Additional gender category or other, please specify"])
-        self.nationality_country = "México"
+        self.sexual_orientation = pacientes_data['data'][pid]["sexual_orientation"]
+        self.gender_identity = pacientes_data['data'][pid]["gender_identity"]
+        self.nationality_country = pacientes_data['data'][pid]["nationality_country"]
         

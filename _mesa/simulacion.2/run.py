@@ -1,11 +1,11 @@
 #run.py
 from csv_saver import save_data_to_csv
 from patient_model import PatientModel
-from domicilios_data import domiciliosData
+from pacientes_data import pacientesData
 
-domicilios = domiciliosData()
+pacientes = pacientesData()
 
-patient_model = PatientModel(domicilios.get_data())
+patient_model = PatientModel(pacientes.get_data())
 
 patient_model.run_simulation()
 
