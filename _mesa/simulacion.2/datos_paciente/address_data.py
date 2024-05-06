@@ -1,13 +1,10 @@
 import random
 
 class AddressData:
-    def __init__(self, domicilios_data):
-        idx = random.randint(0, len(domicilios_data) - 1)
-        while domicilios_data['data'][idx]["NOMREF1"] == "N/A":
-            idx = random.randint(0, len(domicilios_data) - 1)
-        self.street = domicilios_data['data'][idx]["NOMREF1"]
-        self.street_line_2 = domicilios_data['data'][idx]["NOMREF2"]
-        self.postal_code = domicilios_data['data'][idx]["CP"]
+    def __init__(self, pacientes_data, pid):
+        self.street = pacientes_data['data'][pid]["street"]
+        self.street_line_2 = pacientes_data['data'][pid]["street_line_2"]
+        self.postal_code = pacientes_data['data'][pid]["postal_code"]
         self.city = "Tijuana"
         self.state = "Baja California"
         self.country_code = "MEX"
