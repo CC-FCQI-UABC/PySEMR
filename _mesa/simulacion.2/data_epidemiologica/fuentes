@@ -1,0 +1,39 @@
+------NO IMPLEMENTADAS AUN---------
+Probabilidad de contraer Covid19
+https://pubs.acs.org/doi/10.1021/acs.est.2c00792
+
+The role of seasonality in the spread of COVID-19 pandemic
+https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7892320/
+"We find that COVID-19 infectivity and mortality of SARS-CoV-2 are both stronger in colder climates,"
+En el caso de USA en el invierno y en primavera la tasa de mortalidad del Covid es mayor.
+
+https://www.gob.mx/cms/uploads/attachment/file/691056/INFLUENZA_OVR_SE01_2022.pdf
+2,982,137
+
+Modeling the Probability of COVID-19 Based on Symptom Screening and Prevalence of Influenza and Influenza-Like Illnesses
+https://www.ncbi.nlm.nih.gov/pmc/articles/PMC8963439/
+
+-----ESTADISTICAS IMPLEMENTADAS----
+casos covid 2022 baja california:
+
+entre enero de 2022 y enero de 2023 hubieron 90,000 casos de contagios de covid-19 reportados 
+(Revisando la gráfica de defunciones y tomando ambas fechas como rangos)
+
+
+entre [enero-1 de 2022, 92780 acumulados] y [enero-1 de 2023, 170530 acumulados] 
+hubieron 77750 casos de contagios nuevos reportados
+
+entre [Dec-31 de 2021, 11225 defunciones acumuladas] y [Enero-1 de 2023, 12471 defunciones acumuladas] 
+hubieron 1246 casos de defunciones reportadas
+
+https://datos.covid-19.conacyt.mx/ (Revisando la gráfica de defunciones y tomando ambas fechas como rangos)
+
+tomando en cuenta la poblacion baja california: 3,769,020 millones
+https://cuentame.inegi.org.mx/monografias/informacion/bc/poblacion/
+
+formamos una probabilidad de contagio rápida en base acontecimientos a priori
+
+77750/3769020 = 0,0206 probabilidad de contagio
+
+1246/77750 = 0.016025 probabilidad de defuncion 
+

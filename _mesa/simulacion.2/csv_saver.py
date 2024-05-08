@@ -18,6 +18,7 @@ def save_data_to_csv(patients, nombre_archivo, show_sick_status: bool = False):
         ]
         if show_sick_status:
             header_row.append("sick_status")
+            header_row.append("diseases_contracted")
             csv_writer.writerow(header_row)
             for patient in patients:
                 data_row = [
@@ -34,6 +35,8 @@ def save_data_to_csv(patients, nombre_archivo, show_sick_status: bool = False):
                 ]
                 
                 data_row.append(patient.sick_status)
+                for disease in patient.diseases_contracted:
+                    data_row.append(disease)
                 csv_writer.writerow(data_row)
         else:
             csv_writer.writerow(header_row)

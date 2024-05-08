@@ -8,7 +8,6 @@ from datos_paciente.name_data import NameData
 from datos_paciente.contact_data import ContactData
 from datos_paciente.address_data import AddressData
 
-# patient_data.py
 class PatientData(Agent):
     def __init__(self, model, pacientes_data, pid):
         super().__init__(pid, model)
@@ -29,14 +28,17 @@ class PatientData(Agent):
         for disease in self.model.possible_diseases:
             probability = disease.calculate_probability(self.model.ambiente.clima.temperature, self.model.ambiente.clima.season)
             if random.random() < probability:
-                if disease not in self.diseases_contracted:  # Verificar si ya tiene la enfermedad
+                if disease not in self.diseases_contracted:
                     if len(self.diseases_contracted) < 3:
                         disease.contracted_on = self.model.schedule.time 
-                        self.diseases_contracted.append(disease)  # Agregar el objeto Enfermedad completo
+                        self.diseases_contracted.append(disease) 
                         self.sick_status = True
                         self.model.enfermos.append(self)
+                        if disease.nombre == "COVID-19":
+                            if random.random() < 0.016025:
+                                self.sick_status = False
+                                self.model.enfermos.remove(self)
                 break 
-
 
     def heal_diseases(self):
         for disease in self.diseases_contracted:
@@ -52,7 +54,29 @@ class PatientData(Agent):
                     self.sick_status = False
                     
     def calculate_healing_probability(self, disease, temperature, season, days_since_contracted):
-        return 0.9
+        base_probability = 0.9  
+        
+        if disease.nombre == "Influenza":
+            base_probability *= 1.1  
+        elif disease.nombre == "Resfriado":
+            base_probability *= 1.05 
+        
+        if temperature > 25: 
+            base_probability *= 0.95
+        elif temperature < 10: 
+            base_probability *= 1.05
+        
+        if season == "Invierno":
+            base_probability *= 1.05
+        elif season == "Verano":
+            base_probability *= 0.95
+        
+        if days_since_contracted > 14:
+            base_probability *= 1.1
+        
+        base_probability = min(base_probability, 1.0)
+        
+        return base_probability
 
     def days_since_contracted(self, disease):
         return self.model.schedule.time - disease.contracted_on

@@ -14,19 +14,21 @@ class PatientModel(Model):
         self.ambiente = Ambiente(1, self)
         self.pacientesData = pacientesData
         self.possible_diseases = [
-            Enfermedad("Gripe", 0.1, ["Invierno", "Otoño"]),
+            Enfermedad("Influenza", 0.1, ["Invierno", "Otoño"]),
             Enfermedad("Resfriado", 0.1, ["Invierno", "Primavera"]),
-            Enfermedad("COVID-19", 0.1, ["Invierno", "Primavera", "Verano", "Otoño"])
+            
+            #Ver /PySEMR/_mesa/simulacion.2/data_epidemiologica/fuentes
+            Enfermedad("COVID-19", 0.0206, ["Invierno", "Primavera", "Verano", "Otoño"]) 
         ]
         self.enfermos = []
         self.schedule.add(self.ambiente)
         
     def run_simulation(self):
-        self.load_all_patients()  # Cargar todos los pacientes al inicio
+        self.load_all_patients()
         for day in range(365):
             print(f"Día {day + 1}")
             self.step()
-            self.remove_cured_patients()  # Remove cured patients after each day
+            self.remove_cured_patients()  # quitamos los pacientes curados despues de cada dia
         print(f"Data: {len(self.pacientesData['data'])}")
         print(f"Pacientes: {len(self.patients)}")
         return self.patients
@@ -37,15 +39,12 @@ class PatientModel(Model):
             self.patients.append(patient)
 
     def step(self):
-        self.ambiente.step()  # Ejecutar el paso del ambiente
+        self.ambiente.step()  # simulamos el cambio de temporada
 
-        # Los pacientes existentes realizan sus pasos
+        #simulamos el contagio de los pacientes
         for patient in self.patients:
             patient.step()
 
-        # Remove cured patients
-        self.remove_cured_patients()
-
     def remove_cured_patients(self):
-        # Remove cured patients from the list
+        # quitamos pacientes curados
         self.enfermos = [patient for patient in self.enfermos if patient.sick_status]
