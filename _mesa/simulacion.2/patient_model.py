@@ -1,10 +1,11 @@
-#patient_model.py
+import os
 from mesa.time import RandomActivation
 from mesa import Model
 from patient_data import PatientData
 from ambiente import Ambiente
 from enfermedad import Enfermedad
 from pacientes_data import pacientesData
+import matplotlib.pyplot as plt
 
 class PatientModel(Model):
     def __init__(self, pacientesData):
@@ -25,13 +26,27 @@ class PatientModel(Model):
         
     def run_simulation(self):
         self.load_all_patients()
+        diseased_count = []
         for day in range(365):
-            print(f"Día {day + 1}")
+            print(f"Day: {day}")
+            diseased_count.append(len(self.enfermos))
             self.step()
-            self.remove_cured_patients()  # quitamos los pacientes curados despues de cada dia
-        print(f"Data: {len(self.pacientesData['data'])}")
-        print(f"Pacientes: {len(self.patients)}")
-        return self.patients
+            self.remove_cured_patients()
+
+        # Plot the graph of diseased patients
+        plt.plot(range(1, 365), diseased_count[1:])
+        plt.xlabel('Days')
+        plt.ylabel('Number of Diseased Patients')
+        plt.title('Diseased Patients Over Time')
+        plt.grid(True)
+        plt.xlim(0, 366)
+        
+        # Save the graph in the templates directory
+        graph_filename = os.path.join(os.path.dirname(__file__), 'templates', 'diseased_patients_graph.png')
+        plt.savefig(graph_filename)
+        plt.close()
+
+        return graph_filename, self.patients
 
     def load_all_patients(self):
         for pid in range(len(self.pacientesData['data'])):

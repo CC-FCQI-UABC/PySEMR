@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diseased Patients Graph</title>
+    <!-- Add any additional styling or scripts here -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('#runSimulationBtn').click(function() {
+                $.ajax({
+                    type: 'POST',
+                    url: '/run_simulation',
+                    success: function(graphFilename) {
+                        $('#graphImage').attr('src', graphFilename);
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Error:', error);
+                    }
+                });
+            });
+        });
+    </script>
+</head>
+<body>
+    <h1>Diseased Patients Graph</h1>
+    <div>
+        <img src="{{ url_for('static', filename='diseased_patients_graph.png') }}">
+
+    </div>
+    <button id="runSimulationBtn">Run Simulation</button>
+</body>
+</html>
