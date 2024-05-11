@@ -7,7 +7,7 @@ from enfermedad import Enfermedad
 from pacientes_data import get_data
 import matplotlib.pyplot as plt
 import mpld3
-from plot import create_plot
+from plot import PlotGenerator
 
 class PatientModel(Model):
     def __init__(self):
@@ -25,6 +25,7 @@ class PatientModel(Model):
         self.schedule.add(self.ambiente)
         
     def run_simulation(self):
+        plotGenerator = PlotGenerator()
         self.load_all_patients()
         diseased_count = []
         for day in range(365):
@@ -33,7 +34,8 @@ class PatientModel(Model):
             self.step()
             self.remove_cured_patients()
         
-        create_plot(diseased_count)
+        plotGenerator.create_diseased_patients_plot(diseased_count)
+        plotGenerator.save_html_files("diseased_patients_graph")
 
         return self.patients
 

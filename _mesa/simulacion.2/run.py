@@ -17,6 +17,7 @@ def run_simulation():
     patients = patient_model.run_simulation()
     save_data_to_csv(patients, 'patient_data')
     save_data_to_csv(patient_model.enfermos, 'diseased_patients', True)
-
+    return "Simulation completed successfully"
+    
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=8080, debug=True)
