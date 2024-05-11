@@ -168,7 +168,7 @@ ALTER TABLE `mesapatient_data`
   MODIFY `id` bigint NOT NULL AUTO_INCREMENT;
 COMMIT;
 """
-    directory = "PySEMR/_mesa/patient_data"
+    directory = "/PySEMR/_mesa/simulacion.2/patient_data/patient_data.csv"
 
     with open(output_file, 'w', encoding='utf8') as output:
         output.write(create_table_sql)

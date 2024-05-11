@@ -32,7 +32,7 @@ class PatientModel(Model):
         self.ambiente.step()  # Ejecutar el paso del ambiente
 
         # Crear 137 pacientes nuevos cada día
-        self.add_random_patients(137)
+        self.add_random_patients(1370)
 
         # Los pacientes existentes realizan sus pasos
         for patient in self.patients:

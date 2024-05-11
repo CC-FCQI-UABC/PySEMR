@@ -148,18 +148,6 @@ ALTER TABLE `mesapatient_data`
   ADD UNIQUE KEY `uuid` (`uuid`),
   ADD KEY `id` (`id`);
 
---
--- AUTO_INCREMENT de las tablas volcadas
---
-DELIMITER //
-CREATE TRIGGER `generate_uuid` BEFORE INSERT ON `mesapatient_data`
-FOR EACH ROW
-BEGIN
-    SET NEW.uuid = UNHEX(REPLACE(UUID(), '-', ''));
-END;
-//
-DELIMITER ;
-
 
 --
 -- AUTO_INCREMENT de la tabla `mesapatient_data`

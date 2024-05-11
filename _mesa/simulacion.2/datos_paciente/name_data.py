@@ -12,3 +12,6 @@ class NameData:
         self.lname = pacientes_data['data'][pid]["lname"]
         self.mname = pacientes_data['data'][pid]["mname"]
         self.preferred_name = pacientes_data['data'][pid]["preferred_name"]
+    
+    def full_name(self):
+        return self.fname + " " + self.mname + " " + self.lname

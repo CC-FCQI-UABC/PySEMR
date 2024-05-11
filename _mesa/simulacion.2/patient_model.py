@@ -4,22 +4,22 @@ from mesa import Model
 from patient_data import PatientData
 from ambiente import Ambiente
 from enfermedad import Enfermedad
-from pacientes_data import pacientesData
+from pacientes_data import get_data
 import matplotlib.pyplot as plt
+import mpld3
+from plot import create_plot
 
 class PatientModel(Model):
-    def __init__(self, pacientesData):
+    def __init__(self):
         super().__init__()
         self.patients = []
         self.schedule = RandomActivation(self)
         self.ambiente = Ambiente(1, self)
-        self.pacientesData = pacientesData
+        self.pacientesData = get_data()
         self.possible_diseases = [
             Enfermedad("Influenza", 0.1, ["Invierno", "Otoño"]),
             Enfermedad("Resfriado", 0.1, ["Invierno", "Primavera"]),
-            
-            #Ver /PySEMR/_mesa/simulacion.2/data_epidemiologica/fuentes
-            Enfermedad("COVID-19", 0.0206, ["Invierno", "Primavera", "Verano", "Otoño"]) 
+            Enfermedad("COVID-19", 0.0206, ["Invierno", "Primavera", "Verano", "Otoño"])
         ]
         self.enfermos = []
         self.schedule.add(self.ambiente)
@@ -32,21 +32,10 @@ class PatientModel(Model):
             diseased_count.append(len(self.enfermos))
             self.step()
             self.remove_cured_patients()
-
-        # Plot the graph of diseased patients
-        plt.plot(range(1, 365), diseased_count[1:])
-        plt.xlabel('Days')
-        plt.ylabel('Number of Diseased Patients')
-        plt.title('Diseased Patients Over Time')
-        plt.grid(True)
-        plt.xlim(0, 366)
         
-        # Save the graph in the templates directory
-        graph_filename = os.path.join(os.path.dirname(__file__), 'templates', 'diseased_patients_graph.png')
-        plt.savefig(graph_filename)
-        plt.close()
+        create_plot(diseased_count)
 
-        return graph_filename, self.patients
+        return self.patients
 
     def load_all_patients(self):
         for pid in range(len(self.pacientesData['data'])):
@@ -54,12 +43,12 @@ class PatientModel(Model):
             self.patients.append(patient)
 
     def step(self):
-        self.ambiente.step()  # simulamos el cambio de temporada
+        self.ambiente.step()  # simulate the change of season
 
-        #simulamos el contagio de los pacientes
+        # simulate the contagion of the patients
         for patient in self.patients:
             patient.step()
 
     def remove_cured_patients(self):
-        # quitamos pacientes curados
+        # remove cured patients
         self.enfermos = [patient for patient in self.enfermos if patient.sick_status]

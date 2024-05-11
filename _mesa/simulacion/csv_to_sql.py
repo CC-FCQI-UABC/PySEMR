@@ -149,19 +149,6 @@ ALTER TABLE `mesapatient_data`
   ADD KEY `id` (`id`);
 
 --
--- AUTO_INCREMENT de las tablas volcadas
---
-DELIMITER //
-CREATE TRIGGER `generate_uuid` BEFORE INSERT ON `mesapatient_data`
-FOR EACH ROW
-BEGIN
-    SET NEW.uuid = UNHEX(REPLACE(UUID(), '-', ''));
-END;
-//
-DELIMITER ;
-
-
---
 -- AUTO_INCREMENT de la tabla `mesapatient_data`
 --
 ALTER TABLE `mesapatient_data`
@@ -192,13 +179,16 @@ COMMIT;
             row_str = ', '.join(row_values)
             rows.append(f"({row_str})")
         insert_into_sql += ",\n".join(rows) + ";"
-
+    
+    update_uuid_sql = "UPDATE mesapatient_data SET uuid = UUID();"
+    
     with open(output_file, 'a', encoding='utf8') as output:
         output.write("\n\n" + insert_into_sql)
+        output.write("\n\n" + update_uuid_sql)
 
 csv_file = 'PySEMR/_mesa/simulacion.2/patient_data/patient_data.csv'
 table_name = 'mesapatient_data'
-output_file = 'PySEMR/_mesa/simulacion.2/patient_data/mesapatient_data_sql_script.sql'
+output_file = 'PySEMR/_mesa/simulacion.2/patient_data/domicilios.sql'
 
 csv_to_mysql(csv_file, table_name, output_file)
 print("El script SQL se ha escrito en", output_file)

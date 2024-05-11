@@ -144,7 +144,8 @@ def obtener_data():
     preferred_name, 
     nationality_country
 FROM 
-    patient_data 
+    mesapatient_data 
+    limit 50
 ;
 ''')
 
@@ -161,6 +162,18 @@ FROM
             return jsonify({"status": "success", "data": data})
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)})
-
+        
+@app.route('/data_size', methods=['GET'])
+def data_size():
+    try:
+        with engine.connect() as connection:
+            query = text('''SELECT * FROM patient_data limit 50000;''')
+            resultados = connection.execute(query)
+            data = resultados.fetchall()
+            data_size = len(data)
+            return jsonify({'data_size': data_size})
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)})
+        
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)

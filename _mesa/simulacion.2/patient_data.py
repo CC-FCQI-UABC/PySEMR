@@ -80,4 +80,18 @@ class PatientData(Agent):
                     self.sick_status = False
 
     def days_since_contracted(self, disease):
-        return self.model.schedule.time - disease.contracted_on
+        for contracted_disease in self.diseases_contracted:
+            if contracted_disease.nombre == disease:
+                return self.model.schedule.time - contracted_disease.contracted_on
+        return 0  # Return 0 if the disease is not found
+
+    def calculate_window(self, disease):
+        for contracted_disease in self.diseases_contracted:
+            if contracted_disease.nombre == disease:
+                days_since_contracted = self.days_since_contracted(disease)
+                if days_since_contracted is not None:
+                    if contracted_disease.nombre == "COVID-19":
+                        return max(0, 14 - days_since_contracted)
+                    else:
+                        return max(0, 7 - days_since_contracted)
+        return None 
