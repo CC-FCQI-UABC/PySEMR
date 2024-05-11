@@ -1,6 +1,5 @@
+# patient_model.py
 import os
-from mesa.time import RandomActivation
-from mesa import Model
 from patient_data import PatientData
 from ambiente import Ambiente
 from enfermedad import Enfermedad
@@ -8,6 +7,9 @@ from pacientes_data import get_data
 import matplotlib.pyplot as plt
 import mpld3
 from plot import PlotGenerator
+
+from mesa.time import RandomActivation
+from mesa import Model
 
 class PatientModel(Model):
     def __init__(self):
@@ -35,7 +37,7 @@ class PatientModel(Model):
             self.remove_cured_patients()
         
         plotGenerator.create_diseased_patients_plot(diseased_count)
-        plotGenerator.save_html_files("diseased_patients_graph")
+        plotGenerator.save_html_files("diseased_patients_graph.html")
 
         return self.patients
 
@@ -54,3 +56,4 @@ class PatientModel(Model):
     def remove_cured_patients(self):
         # remove cured patients
         self.enfermos = [patient for patient in self.enfermos if patient.sick_status]
+
