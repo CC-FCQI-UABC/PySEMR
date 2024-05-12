@@ -1,5 +1,16 @@
 import os
 
+def generate_insert_from_diseases(enfermos):
+    output_file = "/home/ec2-user/environment/PySEMR/_mesa/simulacion.2/patient_data/insert_into_diseases_list.sql"
+    insert_into_sql = "INSERT INTO lists (type, title, pid, verification, list_option_id) VALUES\n"
+    for enfermo in enfermos:
+        for disease in enfermo.diseases_contracted:
+            insert_into_sql += "('medical_problem', '{}', {}, 'confirmed', '{}'),\n".format(disease.nombre, enfermo.personal_data.pid, disease.nombre)
+    # Eliminar la coma y el salto de línea finales innecesarios
+    insert_into_sql = insert_into_sql.rstrip(",\n")
+    with open(output_file, 'w', encoding='utf8') as output:
+        output.write(insert_into_sql)
+    
 
 def generate_sql_from_patients(patients):
     output_file = "/home/ec2-user/environment/PySEMR/_mesa/simulacion.2/patient_data/create_mesapatient_data_table.sql"
@@ -136,6 +147,8 @@ def generate_sql_from_patients(patients):
       UNIQUE KEY `pid` (`pid`),
       UNIQUE KEY `uuid` (`uuid`)
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+    
+    ALTER TABLE mesapatient_data AUTO_INCREMENT = 0;
     """
 
     # Script to delete existing data from the table

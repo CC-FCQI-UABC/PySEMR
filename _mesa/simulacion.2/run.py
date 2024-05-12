@@ -1,7 +1,7 @@
 # run.py
 from flask import Flask, render_template, request
 from patient_model import PatientModel
-from sql_generator import generate_sql_from_patients
+from sql_generator import *
 import pymysql
 import os
 
@@ -43,8 +43,9 @@ def index():
 @app.route('/run_simulation', methods=['POST'])
 def run_simulation():
     patient_model = PatientModel()
-    patients = patient_model.run_simulation()
+    patients, enfermos = patient_model.run_simulation()
     generate_sql_from_patients(patients)
+    generate_insert_from_diseases(enfermos)
     return "Simulation completed successfully"
 
 if __name__ == '__main__':

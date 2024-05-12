@@ -39,7 +39,7 @@ class PatientModel(Model):
         plotGenerator.create_diseased_patients_plot(diseased_count)
         plotGenerator.save_html_files("diseased_patients_graph.html")
 
-        return self.patients
+        return self.patients, self.enfermos
 
     def load_all_patients(self):
         for pid in range(len(self.pacientesData['data'])):

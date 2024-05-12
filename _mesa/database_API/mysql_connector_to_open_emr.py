@@ -145,7 +145,7 @@ def obtener_data():
     nationality_country
 FROM 
     mesapatient_data 
-    limit 50
+    limit 10000
 ;
 ''')
 
@@ -167,7 +167,7 @@ FROM
 def data_size():
     try:
         with engine.connect() as connection:
-            query = text('''SELECT * FROM patient_data limit 50000;''')
+            query = text('''SELECT * FROM patient_data;''')
             resultados = connection.execute(query)
             data = resultados.fetchall()
             data_size = len(data)
