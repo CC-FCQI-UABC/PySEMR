@@ -19,8 +19,8 @@ class PatientModel(Model):
         self.ambiente = Ambiente(1, self)
         self.pacientesData = get_data()
         self.possible_diseases = [
-            Enfermedad("Influenza", 0.1, ["Invierno", "Otoño"]),
-            Enfermedad("Resfriado", 0.1, ["Invierno", "Primavera"]),
+            Enfermedad("Flu", 0.1, ["Invierno", "Otoño"]),
+            Enfermedad("Common cold", 0.1, ["Invierno", "Primavera"]),
             Enfermedad("COVID-19", 0.0206, ["Invierno", "Primavera", "Verano", "Otoño"])
         ]
         self.enfermos = []

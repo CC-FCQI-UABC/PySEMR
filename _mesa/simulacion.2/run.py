@@ -1,11 +1,40 @@
 # run.py
 from flask import Flask, render_template, request
 from patient_model import PatientModel
-from csv_saver import save_data_to_csv
+from sql_generator import generate_sql_from_patients
+import pymysql
 import os
 
 # Define the Flask app with the correct static folder
 app = Flask(__name__, static_folder='templates/static')
+
+def execute_sql_script(sql_script_file):
+    connection = pymysql.connect(host='148.231.130.238',
+                                 port=3306,
+                                 user='root',
+                                 password='elkomba2',
+                                 db='openemr',
+                                 charset='utf8mb4',
+                                 cursorclass=pymysql.cursors.DictCursor,
+                                 connect_timeout=30)
+
+    
+    try:
+        with connection.cursor() as cursor:
+            with open(sql_script_file, 'r') as file:
+                sql_script = file.read()
+
+            cursor.execute(sql_script)
+        
+        connection.commit()
+        print("Script SQL ejecutado correctamente")
+    
+    except Exception as e:
+        print("Error al ejecutar el script SQL:", str(e))
+    
+    finally:
+        # Cerrar la conexión
+        connection.close()
 
 @app.route('/')
 def index():
@@ -15,9 +44,8 @@ def index():
 def run_simulation():
     patient_model = PatientModel()
     patients = patient_model.run_simulation()
-    save_data_to_csv(patients, 'patient_data')
-    save_data_to_csv(patient_model.enfermos, 'diseased_patients', True)
+    generate_sql_from_patients(patients)
     return "Simulation completed successfully"
-    
+
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=8080, debug=True)

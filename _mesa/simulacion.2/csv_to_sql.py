@@ -7,7 +7,8 @@ def remove_bom(s):
 def csv_to_mysql(csv_file, table_name, output_file):
     # Creación de la tabla
     create_table_sql = """
-CREATE TABLE `mesapatient_data` (
+    
+CREATE TABLE IF NOT EXISTS `mesapatient_data` (
   `id` bigint NOT NULL,
   `uuid` binary(16) DEFAULT NULL,
   `title` varchar(255) COLLATE utf8mb4_general_ci NOT NULL DEFAULT '',
@@ -169,9 +170,15 @@ ALTER TABLE `mesapatient_data`
 COMMIT;
 """
     directory = "/PySEMR/_mesa/simulacion.2/patient_data/patient_data.csv"
-
+    
     with open(output_file, 'w', encoding='utf8') as output:
         output.write(create_table_sql)
+        
+    delete_from_table_sql = f"DELETE FROM {table_name};"
+
+        
+    with open(output_file, 'a', encoding='utf8') as output:
+        output.write("\n\n" + delete_from_table_sql)
 
     with open(csv_file, 'r', encoding='utf-8-sig') as file:
         reader = csv.reader(file)
@@ -194,11 +201,7 @@ COMMIT;
         insert_into_sql += ",\n".join(rows) + ";"
 
     with open(output_file, 'a', encoding='utf8') as output:
-        output.write("\n\n" + insert_into_sql)
-
-csv_file = 'PySEMR/_mesa/simulacion.2/patient_data/patient_data.csv'
-table_name = 'mesapatient_data'
-output_file = 'PySEMR/_mesa/simulacion.2/patient_data/mesapatient_data_sql_script.sql'
-
-csv_to_mysql(csv_file, table_name, output_file)
-print("El script SQL se ha escrito en", output_file)
+            output.write("\n\n" + insert_into_sql)
+            
+    return create_table_sql + "\n\n" + delete_from_table_sql + "\n\n" + insert_into_sql
+    
