@@ -7,17 +7,22 @@ from pacientes_data import get_data
 import matplotlib.pyplot as plt
 import mpld3
 from plot import PlotGenerator
+import math  # Import math for square root calculation
 
 from mesa.time import RandomActivation
 from mesa import Model
+from mesa.space import MultiGrid
 
 class PatientModel(Model):
     def __init__(self):
         super().__init__()
-        self.patients = []
-        self.schedule = RandomActivation(self)
-        self.ambiente = Ambiente(1, self)
         self.pacientesData = get_data()
+        num_patients = len(self.pacientesData['data'])
+        grid_size = self.calculate_grid_size(num_patients)  # Calculate grid size
+        self.grid = MultiGrid(grid_size, grid_size, torus=True)  # Initialize MultiGrid with dynamic size
+        self.schedule = RandomActivation(self)
+        self.patients = []
+        self.ambiente = Ambiente(1, self)
         self.possible_diseases = [
             Enfermedad("Flu", 0.1, ["Invierno", "Otoño"]),
             Enfermedad("Common cold", 0.1, ["Invierno", "Primavera"]),
@@ -25,10 +30,32 @@ class PatientModel(Model):
         ]
         self.enfermos = []
         self.schedule.add(self.ambiente)
-        
+        self.load_all_patients()
+
+    def calculate_grid_size(self, num_agents):
+        size = math.ceil(math.sqrt(num_agents))
+        while size ** 2 < num_agents:
+            size += 1
+        return size
+
+    def load_all_patients(self):
+        for pid in range(len(self.pacientesData['data'])):
+            patient = PatientData(self, self.pacientesData, pid)
+            self.patients.append(patient)
+            x = self.random.randrange(self.grid.width)
+            y = self.random.randrange(self.grid.height)
+            self.grid.place_agent(patient, (x, y))
+            self.schedule.add(patient)
+
+    def step(self):
+        self.ambiente.step()  # simulate the change of season
+        self.schedule.step()
+
+    def remove_cured_patients(self):
+        self.enfermos = [patient for patient in self.enfermos if patient.sick_status]
+
     def run_simulation(self):
         plotGenerator = PlotGenerator()
-        self.load_all_patients()
         diseased_count = []
         for day in range(365):
             print(f"Day: {day}")
@@ -40,20 +67,3 @@ class PatientModel(Model):
         plotGenerator.save_html_files("diseased_patients_graph.html")
 
         return self.patients, self.enfermos
-
-    def load_all_patients(self):
-        for pid in range(len(self.pacientesData['data'])):
-            patient = PatientData(self, self.pacientesData, pid)
-            self.patients.append(patient)
-
-    def step(self):
-        self.ambiente.step()  # simulate the change of season
-
-        # simulate the contagion of the patients
-        for patient in self.patients:
-            patient.step()
-
-    def remove_cured_patients(self):
-        # remove cured patients
-        self.enfermos = [patient for patient in self.enfermos if patient.sick_status]
-

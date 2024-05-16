@@ -145,7 +145,6 @@ def obtener_data():
     nationality_country
 FROM 
     mesapatient_data 
-    limit 10000
 ;
 ''')
 
@@ -175,5 +174,16 @@ def data_size():
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)})
         
+@app.route('/get_example', methods=['GET'])
+def example():
+    try:
+        with engine.connect() as connection:
+            query = text('''SELECT*FROM patient_data where id=1;''')
+            resultados = connection.execute(query)
+            data = resultados.fetchall()
+            return jsonify({'data':data})
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)})
+
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)

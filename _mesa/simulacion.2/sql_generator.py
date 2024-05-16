@@ -1,5 +1,10 @@
 import os
 
+def divide_list_into_chunks(lst, n):
+    """Divide una lista en n partes aproximadamente iguales."""
+    size = (len(lst) + n - 1) // n
+    return [lst[i:i+size] for i in range(0, len(lst), size)]
+
 def generate_insert_from_diseases(enfermos):
     output_file = "/home/ec2-user/environment/PySEMR/_mesa/simulacion.2/patient_data/insert_into_diseases_list.sql"
     insert_into_sql = "INSERT INTO lists (type, title, pid, verification, list_option_id) VALUES\n"
@@ -13,7 +18,6 @@ def generate_insert_from_diseases(enfermos):
     
 
 def generate_sql_from_patients(patients):
-    output_file = "/home/ec2-user/environment/PySEMR/_mesa/simulacion.2/patient_data/create_mesapatient_data_table.sql"
     # Script to create the table
     create_table_sql = """
     CREATE TABLE IF NOT EXISTS `mesapatient_data` (
@@ -151,31 +155,34 @@ def generate_sql_from_patients(patients):
     ALTER TABLE mesapatient_data AUTO_INCREMENT = 0;
     """
 
-    # Script to delete existing data from the table
-    delete_from_table_sql = "DELETE FROM mesapatient_data;"
+    patients_chunks = divide_list_into_chunks(patients, 10)
 
-    # Script to insert data into the table
-    insert_into_sql = "INSERT INTO mesapatient_data (language, fname, mname, lname, DOB, street, postal_code, city, state, country_code, drivers_license, ss, occupation, phone_home, phone_biz, phone_contact, phone_cell, status, contact_relationship, date, sex, email, email_direct, ethnoracial, race, ethnicity, religion, family_size, monthly_income, homeless, pid, county, sexual_orientation, gender_identity, street_line_2, preferred_name, nationality_country) VALUES\n"
-    for patient in patients:
-        data_row = [
-            patient.personal_data.language,
-            patient.name_data.fname, patient.name_data.mname, patient.name_data.lname, patient.personal_data.DOB,
-            patient.address_data.street, patient.address_data.postal_code, patient.address_data.city, patient.address_data.state,
-            patient.address_data.country_code, patient.personal_data.drivers_license, patient.personal_data.ss, patient.personal_data.occupation,
-            patient.contact_data.phone_home, patient.contact_data.phone_biz, patient.contact_data.phone_contact, patient.contact_data.phone_cell,
-            patient.personal_data.status, patient.personal_data.contact_relationship, patient.personal_data.date, patient.personal_data.sex,
-            patient.contact_data.email, patient.contact_data.email_direct, patient.personal_data.ethnoracial, patient.personal_data.race, patient.personal_data.ethnicity,
-            patient.personal_data.religion, patient.personal_data.family_size, patient.personal_data.monthly_income, patient.personal_data.homeless, patient.personal_data.pid,
-            patient.personal_data.county, patient.personal_data.sexual_orientation, patient.personal_data.gender_identity, patient.address_data.street_line_2,
-            patient.name_data.preferred_name, patient.personal_data.nationality_country
-        ]
-        data_row = [f"'{val}'" if isinstance(val, str) else str(val) for val in data_row]
-        insert_into_sql += "({}),\n".format(', '.join(data_row))
-    insert_into_sql = insert_into_sql.rstrip(",\n")
+    for i, chunk in enumerate(patients_chunks, start=1):
+        output_file = f"/home/ec2-user/environment/PySEMR/_mesa/simulacion.2/patient_data/create_mesapatient_data_table_{i}.sql"
+        if i == 1:
+            delete_from_table = "DELETE FROM mesapatient data;"
+            with open(output_file, 'w', encoding='utf8') as output:
+                output.write(delete_from_table)
+                output.write("\n\n")
+        insert_into_sql = "INSERT INTO mesapatient_data (language, fname, mname, lname, DOB, street, postal_code, city, state, country_code, drivers_license, ss, occupation, phone_home, phone_biz, phone_contact, phone_cell, status, contact_relationship, date, sex, email, email_direct, ethnoracial, race, ethnicity, religion, family_size, monthly_income, homeless, pid, county, sexual_orientation, gender_identity, street_line_2, preferred_name, nationality_country) VALUES\n"
+        for patient in chunk:
+            data_row = [
+                patient.personal_data.language,
+                patient.name_data.fname, patient.name_data.mname, patient.name_data.lname, patient.personal_data.DOB,
+                patient.address_data.street, patient.address_data.postal_code, patient.address_data.city, patient.address_data.state,
+                patient.address_data.country_code, patient.personal_data.drivers_license, patient.personal_data.ss, patient.personal_data.occupation,
+                patient.contact_data.phone_home, patient.contact_data.phone_biz, patient.contact_data.phone_contact, patient.contact_data.phone_cell,
+                patient.personal_data.status, patient.personal_data.contact_relationship, patient.personal_data.date, patient.personal_data.sex,
+                patient.contact_data.email, patient.contact_data.email_direct, patient.personal_data.ethnoracial, patient.personal_data.race, patient.personal_data.ethnicity,
+                patient.personal_data.religion, patient.personal_data.family_size, patient.personal_data.monthly_income, patient.personal_data.homeless, patient.personal_data.pid,
+                patient.personal_data.county, patient.personal_data.sexual_orientation, patient.personal_data.gender_identity, patient.address_data.street_line_2,
+                patient.name_data.preferred_name, patient.personal_data.nationality_country
+            ]
+            data_row = [f"'{val}'" if isinstance(val, str) else str(val) for val in data_row]
+            insert_into_sql += "({}),\n".format(', '.join(data_row))
+        insert_into_sql = insert_into_sql.rstrip(",\n")
 
-    with open(output_file, 'w', encoding='utf8') as output:
-        output.write(create_table_sql)
-        output.write("\n\n")
-        output.write(delete_from_table_sql)
-        output.write("\n\n")
-        output.write(insert_into_sql + ";")
+        with open(output_file, 'w', encoding='utf8') as output:
+            output.write(create_table_sql)
+            output.write("\n\n")
+            output.write(insert_into_sql + ";")

@@ -35,6 +35,24 @@ class PlotGenerator:
 
         # Convert the figure to HTML using mpld3
         self.diseased_patients_html += mpld3.fig_to_html(fig)
+        
+    def csv_to_sql_inserts(csv_file, table_name):
+        """Generate SQL insert statements from a CSV file for specific columns."""
+        inserts = []
+        with open(csv_file, 'r', encoding='utf-8-sig') as file:
+            reader = csv.DictReader(file)
+            # Read the data row by row
+            for row in reader:
+                diseases = row['diseases_contracted'].split(',')  # Splitting diseases_contracted by comma
+                pid = row['pid']
+                for disease in diseases:
+                    disease = disease.strip()  # Clean any leading/trailing whitespace
+                    # Build the SQL insert statement
+                    sql = f"INSERT INTO {table_name} (`type`, `title`, `pid`, `verification`, `list_option_id`) VALUES "
+                    sql += f"('medical_problem', '{disease}', '{pid}', 'confirmed', '{disease}');"
+                    inserts.append(sql)
+    
+        return "\n".join(inserts)
 
     def save_html_files(self, diseased_patients_filename):
         # Write the HTML content to files

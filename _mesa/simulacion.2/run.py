@@ -11,7 +11,7 @@ app = Flask(__name__, static_folder='templates/static')
 def execute_sql_script(sql_script_file):
     connection = pymysql.connect(host='148.231.130.238',
                                  port=3306,
-                                 user='root',
+                                 user='master',
                                  password='elkomba2',
                                  db='openemr',
                                  charset='utf8mb4',
