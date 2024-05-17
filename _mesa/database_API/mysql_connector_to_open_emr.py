@@ -144,7 +144,7 @@ def obtener_data():
     preferred_name, 
     nationality_country
 FROM 
-    patient_data 
+    mesapatient_data 
 ;
 ''')
 
@@ -159,6 +159,29 @@ FROM
                 data.append(data_dict)
 
             return jsonify({"status": "success", "data": data})
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)})
+        
+@app.route('/data_size', methods=['GET'])
+def data_size():
+    try:
+        with engine.connect() as connection:
+            query = text('''SELECT * FROM patient_data;''')
+            resultados = connection.execute(query)
+            data = resultados.fetchall()
+            data_size = len(data)
+            return jsonify({'data_size': data_size})
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)})
+        
+@app.route('/get_example', methods=['GET'])
+def example():
+    try:
+        with engine.connect() as connection:
+            query = text('''SELECT*FROM patient_data where id=1;''')
+            resultados = connection.execute(query)
+            data = resultados.fetchall()
+            return jsonify({'data':data})
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)})
 
