@@ -23,7 +23,7 @@ class PersonalData:
         self.family_size = pacientes_data['data'][pid]["family_size"]
         self.monthly_income = pacientes_data['data'][pid]["monthly_income"]
         self.homeless = pacientes_data['data'][pid]["homeless"]
-        self.pid = pacientes_data['data'][pid]["pid"]
+        self.pid = pacientes_data['data'][pid]["pid"]+1
         self.county = "Tijuana"
         self.sexual_orientation = pacientes_data['data'][pid]["sexual_orientation"]
         self.gender_identity = pacientes_data['data'][pid]["gender_identity"]
