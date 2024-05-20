@@ -1,7 +1,7 @@
 # patient_data.py
 from mesa import Agent
-from faker import Faker
 import random
+from datetime import datetime
 
 from datos_paciente.personal_data import PersonalData
 from datos_paciente.name_data import NameData
@@ -22,6 +22,8 @@ class PatientData(Agent):
         self.heal_diseases()
         if not self.sick_status:
             self.contract_disease()
+        else:
+            self.calculate_death()
         self.move()
 
     def move(self):
@@ -32,25 +34,34 @@ class PatientData(Agent):
 
     def contract_disease(self):
         for disease in self.model.possible_diseases:
-            probability = disease.calculate_probability(self.model.ambiente.clima.temperature, self.model.ambiente.clima.season)
-            if random.random() < probability * 0.1:
-                if disease not in self.diseases_contracted:
-                    if len(self.diseases_contracted) < 3:
-                        disease.contracted_on = self.model.schedule.time 
-                        self.diseases_contracted.append(disease) 
-                        self.sick_status = True
-                        self.model.enfermos.append(self)
-                        if disease.nombre == "COVID-19":
-                            if random.random() < 0.01:
-                                self.sick_status = False
-                                self.model.enfermos.remove(self)
-                break 
+            if disease == "COVID-19":
+                if random.random() < disease.probabilidad_inicial: #probabilidad de defuncion definida por data epidemiologica recabada
+                    disease.contracted_on = self.model.schedule.time 
+                    self.diseases_contracted.append(disease) 
+                    self.sick_status = True
+                    self.model.enfermos.append(self)
+                    
+            elif random.random() < disease.calculate_probability(self.model.ambiente.clima.temperature, self.model.ambiente.clima.season):
+                disease.contracted_on = self.model.schedule.time 
+                self.diseases_contracted.append(disease) 
+                self.sick_status = True
+                self.model.enfermos.append(self)
+    
+    def calculate_death(self):
+        if ("COVID-19" in self.diseases_contracted):
+            dob = datetime.strptime(self.personal_data.DOB, '%Y-%m-%d')
+            now = datetime.now()
+            self.age = now.year - dob.year - ((now.month, now.day) < (dob.month, dob.day))
+            if (self.age >= 65 and random.random() < 0.016025):
+                self.sick_status = False
+                self.model.enfermos.remove(self)
+                self.model.deceased_count+=1
 
     def calculate_healing_probability(self, disease, temperature, season, days_since_contracted):
         base_probability = 0.9
-        if disease.nombre == "Influenza":
+        if disease == "Influenza":
             base_probability *= 1.1
-        elif disease.nombre == "Resfriado":
+        elif disease == "Resfriado":
             base_probability *= 1.05
         if temperature > 25:
             base_probability *= 1.1
@@ -80,17 +91,17 @@ class PatientData(Agent):
 
     def days_since_contracted(self, disease):
         for contracted_disease in self.diseases_contracted:
-            if contracted_disease.nombre == disease:
+            if contracted_disease == disease:
                 return self.model.schedule.time - contracted_disease.contracted_on
         return 0
 
-    def calculate_window(self, disease):
-        for contracted_disease in self.diseases_contracted:
-            if contracted_disease.nombre == disease:
-                days_since_contracted = self.days_since_contracted(disease)
-                if days_since_contracted is not None:
-                    if contracted_disease.nombre == "COVID-19":
-                        return max(0, 14 - days_since_contracted)
-                    else:
-                        return max(0, 7 - days_since_contracted)
-        return None 
+    # def calculate_window(self, disease):
+    #     for contracted_disease in self.diseases_contracted:
+    #         if contracted_disease == disease:
+    #             days_since_contracted = self.days_since_contracted(disease)
+    #             if days_since_contracted is not None:
+    #                 if contracted_disease == "COVID-19":
+    #                     return max(0, 14 - days_since_contracted)
+    #                 else:
+    #                     return max(0, 7 - days_since_contracted)
+    #     return None 

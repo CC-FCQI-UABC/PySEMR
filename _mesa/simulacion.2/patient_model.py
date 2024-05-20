@@ -23,13 +23,14 @@ class PatientModel(Model):
         self.patients = []
         self.ambiente = Ambiente(1, self)
         self.possible_diseases = [
-            Enfermedad("Flu", 0.1, ["Invierno", "Otoño"]),
-            Enfermedad("Common cold", 0.1, ["Invierno", "Primavera"]),
-            Enfermedad("COVID-19", 0.0206, ["Invierno", "Primavera", "Verano", "Otoño"])
+            Enfermedad("Flu", 1, ["Invierno", "Otoño"]), #dejamos en 1 por default, esto se puede modificar despues para variar entre modelos lineales o no lineales
+            Enfermedad("Common cold", 1, ["Invierno", "Primavera"]), #dejamos en 1 por default, esto se puede modificar despues para variar entre modelos lineales o no lineales
+            Enfermedad("COVID-19", 0.0206, ["Invierno", "Primavera", "Verano", "Otoño"]) #probabilidad implementada segun data epidemiologica
         ]
         self.enfermos = []
         self.schedule.add(self.ambiente)
         self.load_all_patients()
+        self.deceased_count = 0
 
     def calculate_grid_size(self, num_agents):
         size = math.ceil(math.sqrt(num_agents))
