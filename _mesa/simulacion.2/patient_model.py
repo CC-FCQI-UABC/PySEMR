@@ -1,4 +1,3 @@
-# patient_model.py
 import os
 from patient_data import PatientData
 from ambiente import Ambiente
@@ -7,8 +6,8 @@ from pacientes_data import get_data
 import matplotlib.pyplot as plt
 import mpld3
 from plot import PlotGenerator
-import math  # Import math for square root calculation
-
+import math
+from datetime import datetime  # Import datetime for age calculation
 from mesa.time import RandomActivation
 from mesa import Model
 from mesa.space import MultiGrid
@@ -18,8 +17,8 @@ class PatientModel(Model):
         super().__init__()
         self.pacientesData = get_data()
         num_patients = len(self.pacientesData['data'])
-        grid_size = self.calculate_grid_size(num_patients)  # Calculate grid size
-        self.grid = MultiGrid(grid_size, grid_size, torus=True)  # Initialize MultiGrid with dynamic size
+        grid_size = self.calculate_grid_size(num_patients)
+        self.grid = MultiGrid(grid_size, grid_size, torus=True)
         self.schedule = RandomActivation(self)
         self.patients = []
         self.ambiente = Ambiente(1, self)
@@ -48,7 +47,7 @@ class PatientModel(Model):
             self.schedule.add(patient)
 
     def step(self):
-        self.ambiente.step()  # simulate the change of season
+        self.ambiente.step()
         self.schedule.step()
 
     def remove_cured_patients(self):
@@ -64,6 +63,8 @@ class PatientModel(Model):
             self.remove_cured_patients()
         
         plotGenerator.create_diseased_patients_plot(diseased_count)
-        plotGenerator.save_html_files("diseased_patients_graph.html")
+        plotGenerator.create_histogram(self.patients)
+        plotGenerator.create_disease_distribution_pie_chart(self.patients)
+        plotGenerator.save_html_files("diseased_patients_graph.html", "patients_histogram.html", "disease_distribution_pie_chart.html")
 
         return self.patients, self.enfermos

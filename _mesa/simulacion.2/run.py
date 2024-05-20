@@ -8,34 +8,6 @@ import os
 # Define the Flask app with the correct static folder
 app = Flask(__name__, static_folder='templates/static')
 
-def execute_sql_script(sql_script_file):
-    connection = pymysql.connect(host='148.231.130.238',
-                                 port=3306,
-                                 user='master',
-                                 password='elkomba2',
-                                 db='openemr',
-                                 charset='utf8mb4',
-                                 cursorclass=pymysql.cursors.DictCursor,
-                                 connect_timeout=30)
-
-    
-    try:
-        with connection.cursor() as cursor:
-            with open(sql_script_file, 'r') as file:
-                sql_script = file.read()
-
-            cursor.execute(sql_script)
-        
-        connection.commit()
-        print("Script SQL ejecutado correctamente")
-    
-    except Exception as e:
-        print("Error al ejecutar el script SQL:", str(e))
-    
-    finally:
-        # Cerrar la conexión
-        connection.close()
-
 @app.route('/')
 def index():
     return render_template('index.html')
