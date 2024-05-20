@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 import mpld3
 from plot import PlotGenerator
 import math
-from datetime import datetime  # Import datetime for age calculation
+from datetime import datetime 
 from mesa.time import RandomActivation
 from mesa import Model
 from mesa.space import MultiGrid
@@ -56,15 +56,18 @@ class PatientModel(Model):
     def run_simulation(self):
         plotGenerator = PlotGenerator()
         diseased_count = []
+        temperature_count = []
         for day in range(365):
             print(f"Day: {day}")
             diseased_count.append(len(self.enfermos))
+            temperature_count.append(self.ambiente.clima.temperature)
             self.step()
             self.remove_cured_patients()
         
         plotGenerator.create_diseased_patients_plot(diseased_count)
         plotGenerator.create_histogram(self.patients)
         plotGenerator.create_disease_distribution_pie_chart(self.patients)
-        plotGenerator.save_html_files("diseased_patients_graph.html", "patients_histogram.html", "disease_distribution_pie_chart.html")
+        plotGenerator.create_temperature_disease_correlation(temperature_count, diseased_count)
+        plotGenerator.save_html_files()
 
         return self.patients, self.enfermos

@@ -5,9 +5,8 @@ class Enfermedad:
         self.nombre = nombre
         self.probabilidad_inicial = probabilidad_inicial
         self.estaciones_afectadas = estaciones_afectadas
-        self.contracted_on = None  # Agregamos el atributo para rastrear la fecha de contratación
+        self.contracted_on = None
 
-    # La simulacion de contagio en cuanto al ambiente no esta basada en datos reales
     def calculate_probability(self, temperature, season):
         if season in self.estaciones_afectadas:
             if season == "Invierno":

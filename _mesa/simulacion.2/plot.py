@@ -1,5 +1,6 @@
 import os
 import numpy as np
+from scipy.stats import spearmanr
 import matplotlib.pyplot as plt
 import mpld3
 from collections import Counter
@@ -7,10 +8,11 @@ from datetime import datetime
 
 class PlotGenerator:
     def __init__(self):
-        self.diseased_patients_html = ""
-        self.histogram_html = ""
-        self.pie_chart_html = ""
-
+        self.diseased_patients_html=""
+        self.histogram_html=""
+        self.pie_chart_html=""
+        self.temperature_disease_correlation_html=""
+    
     def calculate_age(self, dob):
         today = datetime.today()
         dob = datetime.strptime(dob, '%Y-%m-%d')
@@ -18,27 +20,28 @@ class PlotGenerator:
         return age
 
     def create_diseased_patients_plot(self, diseased_count):
-        fig, ax = plt.subplots(figsize=(12, 6))  # Expanded plot width
+        fig, ax = plt.subplots(figsize=(12, 6))
         ax.plot(range(1, len(diseased_count) + 1), diseased_count)
         ax.set_xlabel('Days')
         ax.set_ylabel('Number of Diseased Patients')
         ax.set_title('Diseased Patients Over Time')
         ax.grid(True)
         ax.set_xlim(1, len(diseased_count))
-        ax.set_xticks(np.arange(1, len(diseased_count) + 1, step=1))  # More x-axis labels
-
+    
+        interval = 30
+        ax.set_xticks(np.arange(1, len(diseased_count) + 1, step=interval))
+        ax.set_xticklabels([f'{i}-{i+interval-1}' for i in range(1, len(diseased_count) + 1, interval)])
+    
         if len(diseased_count) > 1:
             min_y = min(diseased_count[1:])
             max_y = max(diseased_count[1:])
         else:
             min_y = min(diseased_count)
             max_y = max(diseased_count)
-
+    
         ax.set_ylim(min_y * 0.9, max_y * 1.1)
-
-        # Save to HTML
+    
         self.diseased_patients_html += mpld3.fig_to_html(fig)
-        # Save as an image
         image_path = os.path.join(os.path.dirname(__file__), 'templates', 'static', 'diseased_patients_plot.png')
         fig.savefig(image_path)
 
@@ -53,9 +56,7 @@ class PlotGenerator:
         ax.set_xticklabels([str(int(x)) for x in bins], rotation=45, ha='right')
         plt.tight_layout()
 
-        # Save to HTML
         self.histogram_html += mpld3.fig_to_html(fig)
-        # Save as an image
         image_path = os.path.join(os.path.dirname(__file__), 'templates', 'static', 'age_histogram.png')
         fig.savefig(image_path)
 
@@ -69,25 +70,43 @@ class PlotGenerator:
             ax.pie(sizes, labels=labels, autopct='%1.1f%%', startangle=140)
             ax.set_title('Disease Distribution Among Patients')
 
-            # Save to HTML
             self.pie_chart_html += mpld3.fig_to_html(fig)
-            # Save as an image
             image_path = os.path.join(os.path.dirname(__file__), 'templates', 'static', 'disease_distribution_pie_chart.png')
             fig.savefig(image_path)
         except Exception as e:
             print(f"Error while creating pie chart: {str(e)}")
             raise
 
-    def save_html_files(self, diseased_patients_filename, histogram_filename, pie_chart_filename):
-        diseased_patients_filepath = os.path.join(os.path.dirname(__file__), 'templates', 'static', diseased_patients_filename)
+
+    def create_temperature_disease_correlation(self, temperature_data, diseased_count):
+
+        coeficiente_correlacion, p_valor = spearmanr(temperature_data, diseased_count)
+
+        fig, ax = plt.subplots()
+        ax.scatter(temperature_data, diseased_count)
+        ax.set_xlabel('Temperature')
+        ax.set_ylabel('Number of Diseased Patients')
+        ax.set_title('Correlation between Temperature and Diseased Patients\nSpearman correlation coefficient: {:.2f}'.format(coeficiente_correlacion))
+        ax.grid(True)
+
+        self.temperature_disease_correlation_html += mpld3.fig_to_html(fig)
+        image_path = os.path.join(os.path.dirname(__file__), 'templates', 'static', 'temperature_disease_correlation.png')
+        fig.savefig(image_path)
+
+
+    def save_html_files(self):
+        diseased_patients_filepath = os.path.join(os.path.dirname(__file__), 'templates', 'static', "diseased_patients_graph.html")
         with open(diseased_patients_filepath, 'w') as diseased_patients_file:
             diseased_patients_file.write(self.diseased_patients_html)
 
-        histogram_filepath = os.path.join(os.path.dirname(__file__), 'templates', 'static', histogram_filename)
+        histogram_filepath = os.path.join(os.path.dirname(__file__), 'templates', 'static', "patients_histogram.html")
         with open(histogram_filepath, 'w') as histogram_file:
             histogram_file.write(self.histogram_html)
 
-        pie_chart_filepath = os.path.join(os.path.dirname(__file__), 'templates', 'static', pie_chart_filename)
+        pie_chart_filepath = os.path.join(os.path.dirname(__file__), 'templates', 'static', "disease_distribution_pie_chart.html")
         with open(pie_chart_filepath, 'w') as pie_chart_file:
             pie_chart_file.write(self.pie_chart_html)
 
+        season_correlation_filepath = os.path.join(os.path.dirname(__file__), 'templates', 'static', "temperature_disease_correlation.html")
+        with open(season_correlation_filepath, 'w') as season_correlation_file:
+            season_correlation_file.write(self.temperature_disease_correlation_html)
