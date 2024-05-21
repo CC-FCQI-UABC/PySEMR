@@ -1,3 +1,4 @@
+# patient_model.py
 import os
 from patient_data import PatientData
 from ambiente import Ambiente
@@ -6,8 +7,8 @@ from pacientes_data import get_data
 import matplotlib.pyplot as plt
 import mpld3
 from plot import PlotGenerator
-import math
-from datetime import datetime 
+import math  # Import math for square root calculation
+
 from mesa.time import RandomActivation
 from mesa import Model
 from mesa.space import MultiGrid
@@ -17,20 +18,19 @@ class PatientModel(Model):
         super().__init__()
         self.pacientesData = get_data()
         num_patients = len(self.pacientesData['data'])
-        grid_size = self.calculate_grid_size(num_patients)
-        self.grid = MultiGrid(grid_size, grid_size, torus=True)
+        grid_size = self.calculate_grid_size(num_patients)  # Calculate grid size
+        self.grid = MultiGrid(grid_size, grid_size, torus=True)  # Initialize MultiGrid with dynamic size
         self.schedule = RandomActivation(self)
         self.patients = []
         self.ambiente = Ambiente(1, self)
         self.possible_diseases = [
-            Enfermedad("Flu", 1, ["Invierno", "Otoño"]), #dejamos en 1 por default, esto se puede modificar despues para variar entre modelos lineales o no lineales
-            Enfermedad("Common cold", 1, ["Invierno", "Primavera"]), #dejamos en 1 por default, esto se puede modificar despues para variar entre modelos lineales o no lineales
-            Enfermedad("COVID-19", 0.0206, ["Invierno", "Primavera", "Verano", "Otoño"]) #probabilidad implementada segun data epidemiologica
+            Enfermedad("Flu", 0.1, ["Invierno", "Otoño"]),
+            Enfermedad("Common cold", 0.1, ["Invierno", "Primavera"]),
+            Enfermedad("COVID-19", 0.0206, ["Invierno", "Primavera", "Verano", "Otoño"])
         ]
         self.enfermos = []
         self.schedule.add(self.ambiente)
         self.load_all_patients()
-        self.deceased_count = 0
 
     def calculate_grid_size(self, num_agents):
         size = math.ceil(math.sqrt(num_agents))
@@ -48,7 +48,7 @@ class PatientModel(Model):
             self.schedule.add(patient)
 
     def step(self):
-        self.ambiente.step()
+        self.ambiente.step()  # simulate the change of season
         self.schedule.step()
 
     def remove_cured_patients(self):
@@ -57,18 +57,15 @@ class PatientModel(Model):
     def run_simulation(self):
         plotGenerator = PlotGenerator()
         diseased_count = []
-        temperature_count = []
         for day in range(365):
             print(f"Day: {day}")
             diseased_count.append(len(self.enfermos))
-            temperature_count.append(self.ambiente.clima.temperature)
             self.step()
             self.remove_cured_patients()
         
         plotGenerator.create_diseased_patients_plot(diseased_count)
-        plotGenerator.create_histogram(self.patients)
         plotGenerator.create_disease_distribution_pie_chart(self.patients)
-        plotGenerator.create_temperature_disease_correlation(temperature_count, diseased_count)
+        plotGenerator.create_histogram(self.patients)
         plotGenerator.save_html_files()
 
         return self.patients, self.enfermos

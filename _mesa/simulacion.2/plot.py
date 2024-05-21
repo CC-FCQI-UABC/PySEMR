@@ -62,9 +62,14 @@ class PlotGenerator:
 
     def create_disease_distribution_pie_chart(self, patients):
         try:
-            disease_counts = Counter(disease.nombre for patient in patients for disease in patient.diseases_contracted)
+            disease_counts = Counter()
+            for patient in patients:
+                disease_counts.update(patient.diseases_contracted)
             if not disease_counts:
                 raise ValueError("No diseases found among provided patients.")
+
+            for disease, count in disease_counts.items():
+                print(f"{disease}: {count}")
             labels, sizes = zip(*disease_counts.items())
             fig, ax = plt.subplots()
             ax.pie(sizes, labels=labels, autopct='%1.1f%%', startangle=140)
@@ -92,7 +97,6 @@ class PlotGenerator:
         self.temperature_disease_correlation_html += mpld3.fig_to_html(fig)
         image_path = os.path.join(os.path.dirname(__file__), 'templates', 'static', 'temperature_disease_correlation.png')
         fig.savefig(image_path)
-
 
     def save_html_files(self):
         diseased_patients_filepath = os.path.join(os.path.dirname(__file__), 'templates', 'static', "diseased_patients_graph.html")
