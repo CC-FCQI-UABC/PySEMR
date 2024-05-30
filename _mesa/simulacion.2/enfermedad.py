@@ -10,9 +10,13 @@ class Enfermedad:
     def calculate_probability(self, temperature, season):
         if season in self.estaciones_afectadas:
             if season == "Invierno":
-                return self.probabilidad_inicial * 1.10
+                return self.probabilidad_inicial * 1.20
+            elif season == "Primavera":
+                return self.probabilidad_inicial * 0.4                
             elif season == "Verano":
-                return self.probabilidad_inicial * 0.4
+                return self.probabilidad_inicial * 0.7
+            elif season == "Invierno":
+                return self.probabilidad_inicial * 1.1
             else:
                 return self.probabilidad_inicial
         else:

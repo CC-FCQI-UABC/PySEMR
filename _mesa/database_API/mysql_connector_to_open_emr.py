@@ -145,7 +145,6 @@ def obtener_data():
     nationality_country
 FROM 
     mesapatient_data 
-    limit 5000
 ;
 ''')
 

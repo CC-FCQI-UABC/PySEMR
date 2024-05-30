@@ -45,6 +45,15 @@ class PlotGenerator:
         image_path = os.path.join(os.path.dirname(__file__), 'templates', 'static', 'diseased_patients_plot.png')
         fig.savefig(image_path)
 
+        # Guardar como .png
+        image_path = os.path.join(os.path.dirname(__file__), 'templates', 'static', 'diseased_patients_plot.png')
+        fig.savefig(image_path)
+
+        # Generar HTML
+        diseased_patients_filepath = os.path.join(os.path.dirname(__file__), 'templates', 'static', "diseased_patients_graph.html")
+        with open(diseased_patients_filepath, 'w') as diseased_patients_file:
+            diseased_patients_file.write(self.diseased_patients_html)
+
     def create_histogram(self, patients):
         ages = [self.calculate_age(patient.personal_data.DOB) for patient in patients]
         fig, ax = plt.subplots(figsize=(12, 6))
@@ -57,31 +66,45 @@ class PlotGenerator:
         plt.tight_layout()
 
         self.histogram_html += mpld3.fig_to_html(fig)
+
+        # Guardar como .png
         image_path = os.path.join(os.path.dirname(__file__), 'templates', 'static', 'age_histogram.png')
         fig.savefig(image_path)
+
+        # Generar HTML
+        histogram_filepath = os.path.join(os.path.dirname(__file__), 'templates', 'static', "patients_histogram.html")
+        with open(histogram_filepath, 'w') as histogram_file:
+            histogram_file.write(self.histogram_html)
 
     def create_disease_distribution_pie_chart(self, patients):
         try:
             disease_counts = Counter()
             for patient in patients:
-                disease_counts.update(patient.diseases_contracted)
+                diseases_names = [disease.nombre for disease in patient.diseases_contracted]
+                disease_counts.update(diseases_names)
             if not disease_counts:
                 raise ValueError("No diseases found among provided patients.")
-
+    
             for disease, count in disease_counts.items():
                 print(f"{disease}: {count}")
             labels, sizes = zip(*disease_counts.items())
             fig, ax = plt.subplots()
             ax.pie(sizes, labels=labels, autopct='%1.1f%%', startangle=140)
             ax.set_title('Disease Distribution Among Patients')
-
+    
             self.pie_chart_html += mpld3.fig_to_html(fig)
+
+            # Guardar como .png
             image_path = os.path.join(os.path.dirname(__file__), 'templates', 'static', 'disease_distribution_pie_chart.png')
             fig.savefig(image_path)
+
+            # Generar HTML
+            pie_chart_filepath = os.path.join(os.path.dirname(__file__), 'templates', 'static', "disease_distribution_pie_chart.html")
+            with open(pie_chart_filepath, 'w') as pie_chart_file:
+                pie_chart_file.write(self.pie_chart_html)
         except Exception as e:
             print(f"Error while creating pie chart: {str(e)}")
             raise
-
 
     def create_temperature_disease_correlation(self, temperature_data, diseased_count):
 
@@ -95,22 +118,13 @@ class PlotGenerator:
         ax.grid(True)
 
         self.temperature_disease_correlation_html += mpld3.fig_to_html(fig)
+
+        # Guardar como .png
         image_path = os.path.join(os.path.dirname(__file__), 'templates', 'static', 'temperature_disease_correlation.png')
         fig.savefig(image_path)
 
-    def save_html_files(self):
-        diseased_patients_filepath = os.path.join(os.path.dirname(__file__), 'templates', 'static', "diseased_patients_graph.html")
-        with open(diseased_patients_filepath, 'w') as diseased_patients_file:
-            diseased_patients_file.write(self.diseased_patients_html)
-
-        histogram_filepath = os.path.join(os.path.dirname(__file__), 'templates', 'static', "patients_histogram.html")
-        with open(histogram_filepath, 'w') as histogram_file:
-            histogram_file.write(self.histogram_html)
-
-        pie_chart_filepath = os.path.join(os.path.dirname(__file__), 'templates', 'static', "disease_distribution_pie_chart.html")
-        with open(pie_chart_filepath, 'w') as pie_chart_file:
-            pie_chart_file.write(self.pie_chart_html)
-
+        # Generar HTML
         season_correlation_filepath = os.path.join(os.path.dirname(__file__), 'templates', 'static', "temperature_disease_correlation.html")
         with open(season_correlation_filepath, 'w') as season_correlation_file:
             season_correlation_file.write(self.temperature_disease_correlation_html)
+    

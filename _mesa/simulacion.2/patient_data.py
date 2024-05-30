@@ -32,20 +32,31 @@ class PatientData(Agent):
 
     def contract_disease(self):
         for disease in self.model.possible_diseases:
-            probability = disease.calculate_probability(self.model.ambiente.clima.temperature, self.model.ambiente.clima.season)
-            if random.random() < probability * 0.1:
-                if disease not in self.diseases_contracted:
-                    if len(self.diseases_contracted) < 3:
-                        disease.contracted_on = self.model.schedule.time 
-                        self.diseases_contracted.append(disease) 
-                        self.sick_status = True
-                        self.model.enfermos.append(self)
-                        if disease.nombre == "COVID-19":
-                            if random.random() < 0.01:
-                                self.sick_status = False
-                                self.model.enfermos.remove(self)
-                break 
-
+            probability = disease.calculate_probability(
+                self.model.ambiente.clima.temperature, 
+                self.model.ambiente.clima.season)
+            if disease.nombre == "COVID-19":
+                if random.random() < 0.0206: #Estadistica implementada de la bibliografia
+                    if disease not in self.diseases_contracted:
+                        if len(self.diseases_contracted) < 3:
+                            disease.contracted_on = self.model.schedule.time 
+                            self.diseases_contracted.append(disease) 
+                            self.sick_status = True
+                            self.model.enfermos.append(self)
+                        else:
+                            break
+            else:
+                if random.random() < probability * 0.1:
+                    if disease not in self.diseases_contracted:
+                        if len(self.diseases_contracted) < 3:
+                            disease.contracted_on = self.model.schedule.time 
+                            self.diseases_contracted.append(disease) 
+                            self.sick_status = True
+                            self.model.enfermos.append(self)
+                            break
+                        else:
+                            break
+    
     def calculate_healing_probability(self, disease, temperature, season, days_since_contracted):
         base_probability = 0.9
         if disease.nombre == "Influenza":
@@ -57,26 +68,45 @@ class PatientData(Agent):
         elif temperature < 10:
             base_probability *= 0.95
         if season == "Invierno":
-            base_probability *= 0.95
+            base_probability *= 0.85
         elif season == "Verano":
-            base_probability *= 1.05
+            base_probability *= 1.15
         if days_since_contracted > 14:
             base_probability *= 1.1
         base_probability = min(base_probability, 1.0)
         return base_probability
         
+
     def heal_diseases(self):
         for disease in self.diseases_contracted:
-            healing_probability = self.calculate_healing_probability(
-                disease,
-                self.model.ambiente.clima.temperature,
-                self.model.ambiente.clima.season,
-                self.days_since_contracted(disease)
-            )
-            if random.random() < healing_probability:
-                self.diseases_contracted.remove(disease)
-                if not self.diseases_contracted:
-                    self.sick_status = False
+            if disease.nombre == "COVID-19":
+                days_since_contracted = self.days_since_contracted(disease)
+                if days_since_contracted is not None and days_since_contracted > 4:
+                    if random.random() < 0.016025: #Estadistica implementada de la bibliografia
+                        self.model.fallecidos += 1
+                        self.model.schedule.remove(self)
+                        return
+                else:
+
+                    if random.random() < 0.1:
+                        self.diseases_contracted.remove(disease)
+                        if not self.diseases_contracted:
+                            self.sick_status = False
+            else:
+
+                self.heal_normal_disease(disease)
+
+    def heal_normal_disease(self, disease):
+        healing_probability = self.calculate_healing_probability(
+            disease,
+            self.model.ambiente.clima.temperature,
+            self.model.ambiente.clima.season,
+            self.days_since_contracted(disease)
+        )
+        if random.random() < healing_probability:
+            self.diseases_contracted.remove(disease)
+            if not self.diseases_contracted:
+                self.sick_status = False
 
     def days_since_contracted(self, disease):
         for contracted_disease in self.diseases_contracted:
@@ -84,13 +114,13 @@ class PatientData(Agent):
                 return self.model.schedule.time - contracted_disease.contracted_on
         return 0
 
-    def calculate_window(self, disease):
-        for contracted_disease in self.diseases_contracted:
-            if contracted_disease.nombre == disease:
-                days_since_contracted = self.days_since_contracted(disease)
-                if days_since_contracted is not None:
-                    if contracted_disease.nombre == "COVID-19":
-                        return max(0, 14 - days_since_contracted)
-                    else:
-                        return max(0, 7 - days_since_contracted)
-        return None 
+    # def calculate_window(self, disease):
+    #     for contracted_disease in self.diseases_contracted:
+    #         if contracted_disease.nombre == disease:
+    #             days_since_contracted = self.days_since_contracted(disease)
+    #             if days_since_contracted is not None:
+    #                 if contracted_disease.nombre == "COVID-19":
+    #                     return max(0, 14 - days_since_contracted)
+    #                 else:
+    #                     return max(0, 7 - days_since_contracted)
+    #     return None 
