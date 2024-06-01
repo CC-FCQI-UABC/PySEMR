@@ -10,7 +10,7 @@ def generate_insert_from_diseases(enfermos):
     insert_into_sql = "INSERT INTO lists (type, title, pid, verification, list_option_id) VALUES\n"
     for enfermo in enfermos:
         for disease in enfermo.diseases_contracted:
-            insert_into_sql += "('medical_problem', '{}', {}, 'confirmed', '{}'),\n".format(disease.nombre, enfermo.personal_data.pid, disease.nombre)
+            insert_into_sql += "('medical_problem', '{}', {}, 'confirmed', '{}'),\n".format(disease, enfermo.personal_data.pid, disease)
     # Eliminar la coma y el salto de línea finales innecesarios
     insert_into_sql = insert_into_sql.rstrip(",\n")
     with open(output_file, 'w', encoding='utf8') as output:

@@ -7,7 +7,7 @@ class Ambiente(Agent):
         super().__init__(unique_id, model)
         self.clima = Clima(unique_id, model)
         model.schedule.add(self.clima)
-        self.current_season = "Primavera"
+        self.current_season = "Invierno"
     
     def update_season(self):
         day_of_year = self.model.schedule.steps % 365

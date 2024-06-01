@@ -57,13 +57,17 @@ class PatientModel(Model):
     def run_simulation(self):
         plotGenerator = PlotGenerator()
         diseased_count = []
+        temperaturas = []
         for day in range(365):
             print(f"Day: {day}")
+            temperaturas.append(self.ambiente.clima.temperature)
             diseased_count.append(len(self.enfermos))
             self.step()
             self.remove_cured_patients()
         
         plotGenerator.create_diseased_patients_plot(diseased_count)
-        plotGenerator.save_html_files("diseased_patients_graph.html")
+        plotGenerator.create_disease_distribution_pie_chart(self.enfermos)
+        plotGenerator.create_histogram(self.patients)
+        plotGenerator.create_temperature_disease_correlation(diseased_count, temperaturas)
 
         return self.patients, self.enfermos
