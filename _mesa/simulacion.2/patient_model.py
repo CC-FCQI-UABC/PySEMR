@@ -1,27 +1,25 @@
-# patient_model.py
-import os
+import math
+import matplotlib.pyplot as plt
+from matplotlib.animation import FuncAnimation
 from patient_data import PatientData
 from ambiente import Ambiente
 from enfermedad import Enfermedad
 from pacientes_data import get_data
-import matplotlib.pyplot as plt
-import mpld3
 from plot import PlotGenerator
-import math  # Import math for square root calculation
-
 from mesa.time import RandomActivation
 from mesa import Model
 from mesa.space import MultiGrid
 
 class PatientModel(Model):
-    def __init__(self):
+    def __init__(self, pacientes_data):
         super().__init__()
-        self.pacientesData = get_data()
-        num_patients = len(self.pacientesData['data'])
-        grid_size = self.calculate_grid_size(num_patients)  # Calculate grid size
-        self.grid = MultiGrid(grid_size, grid_size, torus=True)  # Initialize MultiGrid with dynamic size
+        self.pacientes_data = pacientes_data
+        self.grid_size = self.calculate_grid_size(len(pacientes_data['data']))
+        self.grid = MultiGrid(self.grid_size, self.grid_size, torus=True)
         self.schedule = RandomActivation(self)
         self.patients = []
+
+        # Initialize environment and possible diseases
         self.ambiente = Ambiente(1, self)
         self.possible_diseases = [
             Enfermedad("Flu", 0.1, ["Invierno", "Otoño"]),
@@ -39,8 +37,8 @@ class PatientModel(Model):
         return size
 
     def load_all_patients(self):
-        for pid in range(len(self.pacientesData['data'])):
-            patient = PatientData(self, self.pacientesData, pid)
+        for pid in range(len(self.pacientes_data['data'])):
+            patient = PatientData(self, self.pacientes_data, pid)  # Assuming PatientData class exists
             self.patients.append(patient)
             x = self.random.randrange(self.grid.width)
             y = self.random.randrange(self.grid.height)
@@ -48,26 +46,54 @@ class PatientModel(Model):
             self.schedule.add(patient)
 
     def step(self):
-        self.ambiente.step()  # simulate the change of season
+        self.ambiente.step()  # Simulate the change of season
         self.schedule.step()
 
     def remove_cured_patients(self):
         self.enfermos = [patient for patient in self.enfermos if patient.sick_status]
 
-    def run_simulation(self):
-        plotGenerator = PlotGenerator()
+    def run_simulation(self, steps=365):
+        plot_generator = PlotGenerator()
         diseased_count = []
         temperaturas = []
-        for day in range(365):
-            print(f"Day: {day}")
+
+        fig, ax = plt.subplots(figsize=(8, 8))
+        im = ax.imshow([[0] * self.grid_size for _ in range(self.grid_size)], cmap='viridis', vmin=0, vmax=1)
+
+        def update(day):
+            self.step()
             temperaturas.append(self.ambiente.clima.temperature)
             diseased_count.append(len(self.enfermos))
-            self.step()
             self.remove_cured_patients()
-        
-        plotGenerator.create_diseased_patients_plot(diseased_count)
-        plotGenerator.create_disease_distribution_pie_chart(self.enfermos)
-        plotGenerator.create_histogram(self.patients)
-        plotGenerator.create_temperature_disease_correlation(diseased_count, temperaturas)
+
+            # Update grid data for visualization based on sick_status of agents
+            grid_data = [[0] * self.grid_size for _ in range(self.grid_size)]
+            for cell in self.grid.coord_iter():
+                x, y = cell[1]
+                agents = self.grid.get_cell_list_contents([(x, y)])
+                if agents:
+                    # Check if any agent in this cell is sick
+                    if any(agent.sick_status for agent in agents):
+                        grid_data[y][x] = 1
+
+            im.set_data(grid_data)
+            ax.set_title(f"Day: {day}")
+            plt.draw()
+
+        anim = FuncAnimation(fig, update, frames=range(steps), repeat=False)
+        plt.tight_layout()
+        plt.show()
+
+        # Plot static graphs after the simulation completes
+        plot_generator.create_diseased_patients_plot(diseased_count)
+        plot_generator.create_disease_distribution_pie_chart(self.enfermos)
+        plot_generator.create_histogram(self.patients)
+        plot_generator.create_temperature_disease_correlation(diseased_count, temperaturas)
 
         return self.patients, self.enfermos
+
+# Example usage
+if __name__ == "__main__":
+    pacientes_data = get_data()  # Assuming get_data() function retrieves patient data
+    model = PatientModel(pacientes_data)
+    model.run_simulation(steps=365)
