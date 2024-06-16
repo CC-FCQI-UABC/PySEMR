@@ -1,6 +1,5 @@
 # patient_data.py
 from mesa import Agent
-from faker import Faker
 import random
 
 from datos_paciente.personal_data import PersonalData
@@ -22,13 +21,6 @@ class PatientData(Agent):
         self.heal_diseases()
         if not self.sick_status:
             self.contract_disease()
-        self.move()
-
-    def move(self):
-        possible_steps = self.model.grid.get_neighborhood(
-            self.pos, moore=True, include_center=False)
-        new_position = self.random.choice(possible_steps)
-        self.model.grid.move_agent(self, new_position)
 
     def contract_disease(self):
         for disease in self.model.possible_diseases:
@@ -36,7 +28,7 @@ class PatientData(Agent):
                 self.model.ambiente.clima.temperature, 
                 self.model.ambiente.clima.season)
             if disease.nombre == "COVID-19":
-                if random.random() < 0.0206: #Estadistica implementada de la bibliografia
+                if random.random() < 0.0206:  # Estadistica implementada de la bibliografia
                     if disease not in self.diseases_contracted:
                         if len(self.diseases_contracted) < 3:
                             disease.contracted_on = self.model.schedule.time 
@@ -82,18 +74,16 @@ class PatientData(Agent):
             if disease.nombre == "COVID-19":
                 days_since_contracted = self.days_since_contracted(disease)
                 if days_since_contracted is not None and days_since_contracted > 4:
-                    if random.random() < 0.016025: #Estadistica implementada de la bibliografia
+                    if random.random() < 0.016025:  # Estadistica implementada de la bibliografia
                         self.model.fallecidos += 1
                         self.model.schedule.remove(self)
                         return
                 else:
-
                     if random.random() < 0.1:
                         self.diseases_contracted.remove(disease)
                         if not self.diseases_contracted:
                             self.sick_status = False
             else:
-
                 self.heal_normal_disease(disease)
 
     def heal_normal_disease(self, disease):
@@ -113,14 +103,3 @@ class PatientData(Agent):
             if contracted_disease.nombre == disease:
                 return self.model.schedule.time - contracted_disease.contracted_on
         return 0
-
-    # def calculate_window(self, disease):
-    #     for contracted_disease in self.diseases_contracted:
-    #         if contracted_disease.nombre == disease:
-    #             days_since_contracted = self.days_since_contracted(disease)
-    #             if days_since_contracted is not None:
-    #                 if contracted_disease.nombre == "COVID-19":
-    #                     return max(0, 14 - days_since_contracted)
-    #                 else:
-    #                     return max(0, 7 - days_since_contracted)
-    #     return None 

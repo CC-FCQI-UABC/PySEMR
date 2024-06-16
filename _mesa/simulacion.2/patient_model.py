@@ -1,23 +1,21 @@
 import math
 import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation
+from mesa.time import RandomActivation
+from mesa import Model
 from patient_data import PatientData
 from ambiente import Ambiente
 from enfermedad import Enfermedad
 from pacientes_data import get_data
 from plot import PlotGenerator
-from mesa.time import RandomActivation
-from mesa import Model
-from mesa.space import MultiGrid
 
 class PatientModel(Model):
     def __init__(self, pacientes_data):
         super().__init__()
         self.pacientes_data = pacientes_data
-        self.grid_size = self.calculate_grid_size(len(pacientes_data['data']))
-        self.grid = MultiGrid(self.grid_size, self.grid_size, torus=True)
         self.schedule = RandomActivation(self)
         self.patients = []
+        self.enfermos = []
 
         # Initialize environment and possible diseases
         self.ambiente = Ambiente(1, self)
@@ -26,23 +24,14 @@ class PatientModel(Model):
             Enfermedad("Common cold", 0.1, ["Invierno", "Primavera"]),
             Enfermedad("COVID-19", 0.0206, ["Invierno", "Primavera", "Verano", "Otoño"])
         ]
-        self.enfermos = []
+        
         self.schedule.add(self.ambiente)
         self.load_all_patients()
 
-    def calculate_grid_size(self, num_agents):
-        size = math.ceil(math.sqrt(num_agents))
-        while size ** 2 < num_agents:
-            size += 1
-        return size
-
     def load_all_patients(self):
         for pid in range(len(self.pacientes_data['data'])):
-            patient = PatientData(self, self.pacientes_data, pid)  # Assuming PatientData class exists
+            patient = PatientData(self, self.pacientes_data, pid)
             self.patients.append(patient)
-            x = self.random.randrange(self.grid.width)
-            y = self.random.randrange(self.grid.height)
-            self.grid.place_agent(patient, (x, y))
             self.schedule.add(patient)
 
     def step(self):
@@ -57,8 +46,12 @@ class PatientModel(Model):
         diseased_count = []
         temperaturas = []
 
-        fig, ax = plt.subplots(figsize=(8, 8))
-        im = ax.imshow([[0] * self.grid_size for _ in range(self.grid_size)], cmap='viridis', vmin=0, vmax=1)
+        # Calculate grid dimensions
+        num_patients = len(self.patients)
+        grid_size = math.ceil(math.sqrt(num_patients))
+        
+        fig, ax = plt.subplots(figsize=(6, 6))
+        im = ax.imshow([[0] * grid_size for _ in range(grid_size)], cmap='viridis', vmin=0, vmax=1)
 
         def update(day):
             self.step()
@@ -66,15 +59,12 @@ class PatientModel(Model):
             diseased_count.append(len(self.enfermos))
             self.remove_cured_patients()
 
-            # Update grid data for visualization based on sick_status of agents
-            grid_data = [[0] * self.grid_size for _ in range(self.grid_size)]
-            for cell in self.grid.coord_iter():
-                x, y = cell[1]
-                agents = self.grid.get_cell_list_contents([(x, y)])
-                if agents:
-                    # Check if any agent in this cell is sick
-                    if any(agent.sick_status for agent in agents):
-                        grid_data[y][x] = 1
+            # Update data for visualization based on sick_status of agents
+            grid_data = [[0] * grid_size for _ in range(grid_size)]
+            for idx, patient in enumerate(self.patients):
+                x = idx % grid_size
+                y = idx // grid_size
+                grid_data[y][x] = 1 if patient.sick_status else 0
 
             im.set_data(grid_data)
             ax.set_title(f"Day: {day}")
