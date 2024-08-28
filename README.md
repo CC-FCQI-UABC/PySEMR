@@ -3,15 +3,13 @@
 There are two simulations in this repository. If you are running this simulation for the first time, 
 then you must run the first version of the simulation, here below I write the instructions:
 
-1. To run this simulation, first you must clone this repository. Do **git clone https://github.com/CC-FCQI-UABC/PySEMR.git in a terminal**
+1. Do **git clone https://github.com/CC-FCQI-UABC/PySEMR.git**
 
-3. Afterwards you must **head to the directory PySEMR/_mesa/simulacion/**
+3. Afterwards you must install the python dependencies inside the requirements.txt by executing **pip install -r requirements.txt**
 
-4. Once inside, you must install the python dependencies inside the requirements.txt by executing **pip install -r requirements.txt**
-
-5. Then, head to the database_API directory and run the mysql_connector_to_domicilios.py
-
-6. Once done, run the python file run.py with **python ./run.py**
+4. Then, head to the database_API directory and **run the mysql_connector_to_domicilios.py file**
+   
+5. Then you must **head to the directory PySEMR/_mesa/simulacion/** and run the python file run.py with **python ./run.py**
 
 7. In your terminal, the mesa simulation should start generating multiple patients and in the end, it will leave a couple of .csv files in the directory.
    Those .csv files can be converted into sql files with the csv_to_sql.py script, all you have to do is run this script and you will get the sql files.
