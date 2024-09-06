@@ -23,8 +23,14 @@
 
 import os
 import random
+
+# Function to select a random line from a file
 def randomize(file_name):
+    # Construct the full path to the file
     file_path = os.path.join(os.path.dirname(__file__), '..', 'data_mexicana', file_name)
+    
+    # Open the file and read all lines
     with open(file_path, 'r') as f:
-        lines = f.readlines()
+        lines = f.readlines()  # Read all lines from the file
+        # Select a random line and strip any leading/trailing whitespace
         return random.choice(lines).strip()

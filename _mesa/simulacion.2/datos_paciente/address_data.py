@@ -21,8 +21,6 @@
 ## Status: Released.
 ######################################################################
 
-import random
-
 class AddressData:
     def __init__(self, pacientes_data, pid):
         self.street = pacientes_data['data'][pid]["street"]

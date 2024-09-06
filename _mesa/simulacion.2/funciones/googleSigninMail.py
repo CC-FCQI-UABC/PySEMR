@@ -23,9 +23,13 @@
 
 from faker import Faker
 
+# Initialize the Faker object with Mexican locale
 fake = Faker('es_MX')
+
+# Function to generate a random email address ending with "@gmail.com"
 def returnMail():
     email = ""
+    # Keep generating a new email until it ends with "@gmail.com"
     while not email.endswith("@gmail.com"):
         email = fake.free_email()
     return email

@@ -23,8 +23,10 @@
 
 import random
 
+# Function to generate a random license plate
 def licencia():
-    licencia = "BC"
+    licencia = "BC"  # Initialize the license plate with the prefix "BC"
+    # Append 9 random digits to the license plate
     for i in range(9):
         licencia += str(random.randint(0, 9))
     return licencia

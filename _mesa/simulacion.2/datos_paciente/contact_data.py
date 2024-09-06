@@ -21,7 +21,6 @@
 ## Status: Released.
 ######################################################################
 
-from funciones import numeroTelefono
 from faker import Faker
 
 fake = Faker('es_MX')

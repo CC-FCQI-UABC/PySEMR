@@ -24,9 +24,11 @@
 import os
 import random
 
+# Function to get a random street name based on the city
 def calle(nombre_ciudad):
     archivo = ""
 
+    # Determine the file name based on the city
     if nombre_ciudad == 'Tijuana':
         archivo = "callesTijuana.txt"
     elif nombre_ciudad == 'Mexicali':
@@ -35,19 +37,21 @@ def calle(nombre_ciudad):
         archivo = "callesRosarito.txt"
     elif nombre_ciudad == 'Tecate':
         archivo = "callesTecate.txt"
-    
-    else: #Ensenada y otros municipios
+    else:  # For Ensenada and other municipalities
         archivo = "callesEnsenada.txt"
     
+    # Build the full path to the file
     file_path = os.path.join(os.path.dirname(__file__), '..', 'data_mexicana', 'calles', archivo)
     
-    linea_aleatoria = None
+    linea_aleatoria = None  # Variable to store the random street name
     
-    contador = 0
+    contador = 0  # Counter to keep track of the number of lines read
     
+    # Open and read the file to get a random line
     with open(file_path, 'r', encoding='utf-8') as file:
-        for linea in archivo:
+        for linea in file:
             contador += 1
+            # Randomly select a line based on the number of lines read
             if random.randint(0, contador - 1) == 0:
                 linea_aleatoria = linea.strip() 
     

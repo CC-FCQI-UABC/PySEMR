@@ -28,46 +28,46 @@ from mesa.time import RandomActivation
 from mesa import Model
 from patient_data import PatientData
 from ambiente import Ambiente
-from enfermedad import Enfermedad
+from enfermedad import Disease  # Changed to Disease from Enfermedad
 from pacientes_data import get_data
 from plot import PlotGenerator
 
 class PatientModel(Model):
-    def __init__(self, pacientes_data):
+    def __init__(self, patients_data):
         super().__init__()
-        self.pacientes_data = pacientes_data
+        self.patients_data = patients_data
         self.schedule = RandomActivation(self)
         self.patients = []
-        self.enfermos = []
+        self.sick_patients = []
 
         # Initialize environment and possible diseases
-        self.ambiente = Ambiente(1, self)
+        self.environment = Ambiente(1, self)
         self.possible_diseases = [
-            Enfermedad("Flu", 0.1, ["Invierno", "Otoño"]),
-            Enfermedad("Common cold", 0.1, ["Invierno", "Primavera"]),
-            Enfermedad("COVID-19", 0.0206, ["Invierno", "Primavera", "Verano", "Otoño"])
+            Disease("Flu", 0.1, ["Winter", "Autumn"]),
+            Disease("Common cold", 0.1, ["Winter", "Spring"]),
+            Disease("COVID-19", 0.0206, ["Winter", "Spring", "Summer", "Autumn"])
         ]
         
-        self.schedule.add(self.ambiente)
+        self.schedule.add(self.environment)
         self.load_all_patients()
 
     def load_all_patients(self):
-        for pid in range(len(self.pacientes_data['data'])):
-            patient = PatientData(self, self.pacientes_data, pid)
+        for pid in range(len(self.patients_data['data'])):
+            patient = PatientData(self, self.patients_data, pid)
             self.patients.append(patient)
             self.schedule.add(patient)
 
     def step(self):
-        self.ambiente.step()  # Simulate the change of season
+        self.environment.step()  # Simulate the change of season
         self.schedule.step()
 
     def remove_cured_patients(self):
-        self.enfermos = [patient for patient in self.enfermos if patient.sick_status]
+        self.sick_patients = [patient for patient in self.sick_patients if patient.sick_status]
 
     def run_simulation(self, steps=365):
         plot_generator = PlotGenerator()
         diseased_count = []
-        temperaturas = []
+        temperatures = []
 
         # Calculate grid dimensions
         num_patients = len(self.patients)
@@ -78,8 +78,8 @@ class PatientModel(Model):
 
         def update(day):
             self.step()
-            temperaturas.append(self.ambiente.clima.temperature)
-            diseased_count.append(len(self.enfermos))
+            temperatures.append(self.environment.climate.temperature)
+            diseased_count.append(len(self.sick_patients))
             self.remove_cured_patients()
 
             # Update data for visualization based on sick_status of agents
@@ -99,14 +99,14 @@ class PatientModel(Model):
 
         # Plot static graphs after the simulation completes
         plot_generator.create_diseased_patients_plot(diseased_count)
-        plot_generator.create_disease_distribution_pie_chart(self.enfermos)
+        plot_generator.create_disease_distribution_pie_chart(self.sick_patients)
         plot_generator.create_histogram(self.patients)
-        plot_generator.create_temperature_disease_correlation(diseased_count, temperaturas)
+        plot_generator.create_temperature_disease_correlation(diseased_count, temperatures)
 
-        return self.patients, self.enfermos
+        return self.patients, self.sick_patients
 
 # Example usage
 if __name__ == "__main__":
-    pacientes_data = get_data()  # Assuming get_data() function retrieves patient data
-    model = PatientModel(pacientes_data)
+    patients_data = get_data()  # Assuming get_data() function retrieves patient data
+    model = PatientModel(patients_data)
     model.run_simulation(steps=365)

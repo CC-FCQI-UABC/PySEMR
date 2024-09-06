@@ -24,7 +24,12 @@
 import random
 
 def licencia():
+    # Start the license string with "BC"
     licencia = "BC"
+    
+    # Add 9 random digits to the license string
     for i in range(9):
         licencia += str(random.randint(0, 9))
+    
+    # Return the generated license
     return licencia

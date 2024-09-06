@@ -31,10 +31,10 @@ from datetime import datetime
 
 class PlotGenerator:
     def __init__(self):
-        self.diseased_patients_html=""
-        self.histogram_html=""
-        self.pie_chart_html=""
-        self.temperature_disease_correlation_html=""
+        self.diseased_patients_html = ""
+        self.histogram_html = ""
+        self.pie_chart_html = ""
+        self.temperature_disease_correlation_html = ""
     
     def calculate_age(self, dob):
         today = datetime.today()
@@ -68,11 +68,11 @@ class PlotGenerator:
         image_path = os.path.join(os.path.dirname(__file__), 'templates', 'static', 'diseased_patients_plot.png')
         fig.savefig(image_path)
 
-        # Guardar como .png
+        # Save as .png
         image_path = os.path.join(os.path.dirname(__file__), 'templates', 'static', 'diseased_patients_plot.png')
         fig.savefig(image_path)
 
-        # Generar HTML
+        # Generate HTML
         diseased_patients_filepath = os.path.join(os.path.dirname(__file__), 'templates', 'static', "diseased_patients_graph.html")
         with open(diseased_patients_filepath, 'w') as diseased_patients_file:
             diseased_patients_file.write(self.diseased_patients_html)
@@ -90,11 +90,11 @@ class PlotGenerator:
 
         self.histogram_html += mpld3.fig_to_html(fig)
 
-        # Guardar como .png
+        # Save as .png
         image_path = os.path.join(os.path.dirname(__file__), 'templates', 'static', 'age_histogram.png')
         fig.savefig(image_path)
 
-        # Generar HTML
+        # Generate HTML
         histogram_filepath = os.path.join(os.path.dirname(__file__), 'templates', 'static', "patients_histogram.html")
         with open(histogram_filepath, 'w') as histogram_file:
             histogram_file.write(self.histogram_html)
@@ -103,7 +103,7 @@ class PlotGenerator:
         try:
             disease_counts = Counter()
             for patient in patients:
-                diseases_names = [disease.nombre for disease in patient.diseases_contracted]
+                diseases_names = [disease.name for disease in patient.diseases_contracted]  # Changed 'nombre' to 'name'
                 disease_counts.update(diseases_names)
             if not disease_counts:
                 raise ValueError("No diseases found among provided patients.")
@@ -117,11 +117,11 @@ class PlotGenerator:
     
             self.pie_chart_html += mpld3.fig_to_html(fig)
 
-            # Guardar como .png
+            # Save as .png
             image_path = os.path.join(os.path.dirname(__file__), 'templates', 'static', 'disease_distribution_pie_chart.png')
             fig.savefig(image_path)
 
-            # Generar HTML
+            # Generate HTML
             pie_chart_filepath = os.path.join(os.path.dirname(__file__), 'templates', 'static', "disease_distribution_pie_chart.html")
             with open(pie_chart_filepath, 'w') as pie_chart_file:
                 pie_chart_file.write(self.pie_chart_html)
@@ -130,24 +130,23 @@ class PlotGenerator:
             raise
 
     def create_temperature_disease_correlation(self, temperature_data, diseased_count):
-
-        coeficiente_correlacion, p_valor = spearmanr(temperature_data, diseased_count)
+        # Calculate Spearman correlation coefficient
+        correlation_coefficient, p_value = spearmanr(temperature_data, diseased_count)
 
         fig, ax = plt.subplots()
         ax.scatter(temperature_data, diseased_count)
         ax.set_xlabel('Temperature')
         ax.set_ylabel('Number of Diseased Patients')
-        ax.set_title('Correlation between Temperature and Diseased Patients\nSpearman correlation coefficient: {:.2f}'.format(coeficiente_correlacion))
+        ax.set_title('Correlation between Temperature and Diseased Patients\nSpearman correlation coefficient: {:.2f}'.format(correlation_coefficient))
         ax.grid(True)
 
         self.temperature_disease_correlation_html += mpld3.fig_to_html(fig)
 
-        # Guardar como .png
+        # Save as .png
         image_path = os.path.join(os.path.dirname(__file__), 'templates', 'static', 'temperature_disease_correlation.png')
         fig.savefig(image_path)
 
-        # Generar HTML
-        season_correlation_filepath = os.path.join(os.path.dirname(__file__), 'templates', 'static', "temperature_disease_correlation.html")
-        with open(season_correlation_filepath, 'w') as season_correlation_file:
-            season_correlation_file.write(self.temperature_disease_correlation_html)
-    
+        # Generate HTML
+        correlation_filepath = os.path.join(os.path.dirname(__file__), 'templates', 'static', "temperature_disease_correlation.html")
+        with open(correlation_filepath, 'w') as correlation_file:
+            correlation_file.write(self.temperature_disease_correlation_html)

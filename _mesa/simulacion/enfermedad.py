@@ -21,20 +21,20 @@
 ## Status: Released.
 ######################################################################
 
-# enfermedad.py
-
 class Enfermedad:
     def __init__(self, nombre, probabilidad_inicial, estaciones_afectadas):
         self.nombre = nombre
         self.probabilidad_inicial = probabilidad_inicial
         self.estaciones_afectadas = estaciones_afectadas
-        self.contracted_on = None  # Agregamos el atributo para rastrear la fecha de contratación
+        self.contracted_on = None  # Added attribute to track the date of contracting
 
     def calculate_probability(self, temperature, season):
+        # Check if the current season is affected by the disease
         if season in self.estaciones_afectadas:
-            if season == "Invierno":
+            # Adjust the probability based on the season
+            if season == "Winter":
                 return self.probabilidad_inicial * 1.10
-            elif season == "Verano":
+            elif season == "Summer":
                 return self.probabilidad_inicial * 0.4
             else:
                 return self.probabilidad_inicial

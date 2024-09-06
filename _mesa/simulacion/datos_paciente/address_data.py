@@ -25,13 +25,20 @@ import random
 
 class AddressData:
     def __init__(self, domicilios_data):
+        # Randomly select an index within the range of 'domicilios_data'
         idx = random.randint(0, len(domicilios_data) - 1)
+        
+        # Continue selecting random indices until the value for "NOMREF1" is not "N/A"
         while domicilios_data['data'][idx]["NOMREF1"] == "N/A":
             idx = random.randint(0, len(domicilios_data) - 1)
-        # TIPOVIAL + NOMVIAL + NUMEXT 
-        self.street = domicilios_data['data'][idx]["TIPOVIAL"] + domicilios_data['data'][idx]["NOMVIAL"] + domicilios_data['data'][idx]["NUMEXT"] 
+        
+        # Construct the street address using "TIPOVIAL", "NOMVIAL", and "NUMEXT"
+        self.street = domicilios_data['data'][idx]["TIPOVIAL"] + domicilios_data['data'][idx]["NOMVIAL"] + domicilios_data['data'][idx]["NUMEXT"]
+        
+        # Create the second line of the address using "TIPOASEN" and "NOMASEN"
         self.street_line_2 = domicilios_data['data'][idx]["TIPOASEN"] + domicilios_data['data'][idx]["NOMASEN"]
-        # TIPOASEN,NOMASEN
+        
+        # Set postal code, city, state, and country code
         self.postal_code = domicilios_data['data'][idx]["CP"]
         self.city = "Tijuana"
         self.state = "Baja California"

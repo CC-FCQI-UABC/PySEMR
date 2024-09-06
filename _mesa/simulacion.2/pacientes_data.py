@@ -25,16 +25,18 @@ import requests
 
 def get_data():
     try:
-        # Realiza una solicitud GET al servidor Flask para obtener los datos
+        # Make a GET request to the Flask server to obtain the data
         response = requests.get('http://localhost:5000/data')
 
-        # Verifica si la solicitud fue exitosa (código de estado 200)
+        # Check if the request was successful (status code 200)
         if response.status_code == 200:
-            # Extrae los datos del cuerpo de la respuesta JSON
+            # Extract the data from the JSON response body
             Data = response.json()
-            # Almacena los datos en el objeto de almacenamiento
+            # Return the data
             return Data
         else:
-            print("Error al obtener los datos:", response.text)
+            # Print an error message if the request was not successful
+            print("Error retrieving data:", response.text)
     except Exception as e:
-        print("Error al conectarse al servidor:", e)
+        # Print an error message if there was an exception during the request
+        print("Error connecting to the server:", e)

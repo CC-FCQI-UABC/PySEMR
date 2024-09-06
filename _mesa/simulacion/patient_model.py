@@ -21,7 +21,7 @@
 ## Status: Released.
 ######################################################################
 
-#patient_model.py
+# patient_model.py
 from mesa.time import RandomActivation
 from mesa import Model
 from patient_data import PatientData
@@ -29,35 +29,39 @@ from ambiente import Ambiente
 from enfermedad import Enfermedad
 from domicilios_data import domiciliosData
 
+# Define the PatientModel class inheriting from Mesa's Model
 class PatientModel(Model):
     def __init__(self, domiciliosData):
         super().__init__()
-        self.patients = []
-        self.schedule = RandomActivation(self)
-        self.ambiente = Ambiente(1, self)
-        self.domicilios = domiciliosData
+        self.patients = []  # List to store all patient agents
+        self.schedule = RandomActivation(self)  # Scheduler to manage agent activation
+        self.ambiente = Ambiente(1, self)  # Environment object
+        self.domicilios = domiciliosData  # Domicilios data for address information
+        # List of possible diseases with their probabilities and affected seasons
         self.possible_diseases = [
             Enfermedad("Gripe", 0.1, ["Invierno", "Otoño"]),
             Enfermedad("Resfriado", 0.1, ["Invierno", "Primavera"]),
             Enfermedad("COVID-19", 0.1, ["Invierno", "Primavera", "Verano", "Otoño"])
         ]
-        self.enfermos = []
-        self.schedule.add(self.ambiente)
+        self.enfermos = []  # List to track sick patients
+        self.schedule.add(self.ambiente)  # Add the environment to the scheduler
         
     def run_simulation(self):
+        # Run the simulation for 365 days
         for day in range(365):
-            print(f"Día {day + 1}")
-            self.step()
+            print(f"Day {day + 1}")
+            self.step()  # Execute one step of the model
             self.remove_cured_patients()  # Remove cured patients after each day
-        return self.patients
+        return self.patients  # Return the list of patients
 
     def step(self):
-        self.ambiente.step()  # Ejecutar el paso del ambiente
+        # Advance the environment and patient agents by one step
+        self.ambiente.step()  # Execute the environment step
 
-        # Crear 137 pacientes nuevos cada día
-        self.add_random_patients(1370)
+        # Create 137 new patients each day
+        self.add_random_patients(137)
 
-        # Los pacientes existentes realizan sus pasos
+        # Execute steps for all existing patients
         for patient in self.patients:
             patient.step()
 
@@ -65,11 +69,11 @@ class PatientModel(Model):
         self.remove_cured_patients()
 
     def add_random_patients(self, num_patients):
+        # Add a specified number of random patients to the model
         for _ in range(num_patients):
-            # Crear 137 pacientes nuevos cada día
             patient = PatientData(self, self.domicilios, len(self.patients))
             self.patients.append(patient)
 
     def remove_cured_patients(self):
-        # Remove cured patients from the list
+        # Remove patients who have been cured from the list of sick patients
         self.enfermos = [patient for patient in self.enfermos if patient.sick_status]

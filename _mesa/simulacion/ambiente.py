@@ -21,15 +21,20 @@
 ## Status: Released.
 ######################################################################
 
-# ambiente.py
+# environment.py
 from mesa import Agent
 from clima import Clima
 
-class Ambiente(Agent):
+# Define the Environment agent class
+class Environment(Agent):
     def __init__(self, unique_id, model):
         super().__init__(unique_id, model)
-        self.clima = Clima(unique_id, model)  # Creamos una instancia de Clima
-        model.schedule.add(self.clima)  # Agregamos el agente Clima al schedule del modelo
+        # Create an instance of the Climate agent
+        self.climate = Clima(unique_id, model)
+        # Add the Climate agent to the model's schedule
+        model.schedule.add(self.climate)
 
+    # Define the step function for the Environment agent
     def step(self):
-        self.clima.step()  # Ejecutamos el paso de Clima
+        # Execute the step function for the Climate agent
+        self.climate.step()

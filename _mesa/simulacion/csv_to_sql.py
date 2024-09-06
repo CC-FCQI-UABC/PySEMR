@@ -24,11 +24,13 @@
 import csv
 import os
 
+# Function to remove Byte Order Mark (BOM) from strings
 def remove_bom(s):
     return s.replace('\ufeff', '')
 
+# Function to convert a CSV file to MySQL insert statements and generate a table creation SQL script
 def csv_to_mysql(csv_file, table_name, output_file):
-    # Creación de la tabla
+    # SQL script to create the MySQL table
     create_table_sql = """
 CREATE TABLE `mesapatient_data` (
   `id` bigint NOT NULL,
@@ -178,40 +180,53 @@ ALTER TABLE `mesapatient_data`
   MODIFY `id` bigint NOT NULL AUTO_INCREMENT;
 COMMIT;
 """
-    directory = "PySEMR/_mesa/patient_data"
 
+    # Open the output SQL file in write mode with UTF-8 encoding and write the table creation SQL statement
     with open(output_file, 'w', encoding='utf8') as output:
         output.write(create_table_sql)
 
+    # Open the CSV file in read mode with UTF-8 encoding (handling BOM if present) and read the column headers
     with open(csv_file, 'r', encoding='utf-8-sig') as file:
         reader = csv.reader(file)
         columns = next(reader)
 
+    # Clean the column headers by removing any BOM (Byte Order Mark)
     columns = [remove_bom(column) for column in columns]
 
+    # Prepare the initial part of the INSERT INTO SQL statement with the column names
     insert_into_sql = f"INSERT INTO {table_name} (`" + "`, `".join(columns) + "`) VALUES\n"
+
+    # Open the CSV file again to read all the rows (skipping the header) and collect data for the INSERT statement
     with open(csv_file, 'r', encoding='utf-8-sig') as file:
         reader = csv.reader(file)
-        next(reader)
+        next(reader)  # Skip the header row
         rows = []
+        
+        # Process each row: escape single quotes in the values and prepare the values for the INSERT statement
         for row in reader:
             row_values = []
             for column, value in zip(columns, row):
-                value = value.replace("'", "''")
+                value = value.replace("'", "''")  # Escape single quotes in the values
                 row_values.append(f"'{value}'")
             row_str = ', '.join(row_values)
             rows.append(f"({row_str})")
+        
+        # Concatenate all rows to complete the INSERT statement
         insert_into_sql += ",\n".join(rows) + ";"
-    
+
+    # Add an SQL statement to update the 'uuid' field by generating a new UUID for each record
     update_uuid_sql = "UPDATE mesapatient_data SET uuid = UUID();"
-    
+
+    # Append the generated INSERT and UPDATE statements to the SQL output file
     with open(output_file, 'a', encoding='utf8') as output:
         output.write("\n\n" + insert_into_sql)
         output.write("\n\n" + update_uuid_sql)
 
-csv_file = 'PySEMR/_mesa/simulacion.2/patient_data/patient_data.csv'
-table_name = 'mesapatient_data'
-output_file = 'PySEMR/_mesa/simulacion.2/patient_data/domicilios.sql'
+    # Define file paths and table name for the CSV to SQL conversion
+    csv_file = 'PySEMR/_mesa/simulacion.2/patient_data/patient_data.csv'
+    table_name = 'mesapatient_data'
+    output_file = 'PySEMR/_mesa/simulacion.2/patient_data/domicilios.sql'
 
-csv_to_mysql(csv_file, table_name, output_file)
-print("El script SQL se ha escrito en", output_file)
+    # Call the function to convert the CSV data to an SQL script
+    csv_to_mysql(csv_file, table_name, output_file)
+    print("The SQL script has been written to", output_file)

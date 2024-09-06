@@ -21,11 +21,6 @@
 ## Status: Released.
 ######################################################################
 
-import sys
-import os
-from mesa import Agent, Model
-from funciones import randomizer, numeroTelefono, licenciaConducir
-import random
 import datetime
 
 class PersonalData:

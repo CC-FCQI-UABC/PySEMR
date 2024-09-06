@@ -20,16 +20,19 @@
 ## Email: puga@uabc.edu.mx
 ## Status: Released.
 ######################################################################
-
 import csv
 import os
 
-def save_data_to_csv(patients, nombre_archivo, show_sick_status: bool = False):
+def save_data_to_csv(patients, file_name, show_sick_status: bool = False):
+    # Define the directory where the CSV file will be saved
     directory = "PySEMR/_mesa/simulacion.2/patient_data"
+    # Create the directory if it doesn't exist
     os.makedirs(directory, exist_ok=True)
 
-    with open(os.path.join(directory, nombre_archivo + '.csv'), 'w', newline='') as csvfile:
+    # Open a new CSV file for writing
+    with open(os.path.join(directory, file_name + '.csv'), 'w', newline='') as csvfile:
         csv_writer = csv.writer(csvfile)
+        # Define the header row for the CSV file
         header_row = [
             "language", "fname", "mname", "lname",
             "DOB", "street", "postal_code", "city", "state", "country_code", "drivers_license",
@@ -39,10 +42,12 @@ def save_data_to_csv(patients, nombre_archivo, show_sick_status: bool = False):
             "homeless", "pid", "county", "sexual_orientation", "gender_identity",
             "street_line_2", "preferred_name", "nationality_country"
         ]
+        # Add extra columns to the header if show_sick_status is True
         if show_sick_status:
             header_row.append("sick_status")
             header_row.append("diseases_contracted")
             csv_writer.writerow(header_row)
+            # Write data rows to the CSV file
             for patient in patients:
                 data_row = [
                     patient.personal_data.language,
@@ -56,12 +61,13 @@ def save_data_to_csv(patients, nombre_archivo, show_sick_status: bool = False):
                     patient.personal_data.county, patient.personal_data.sexual_orientation, patient.personal_data.gender_identity, patient.address_data.street_line_2,
                     patient.name_data.preferred_name, patient.personal_data.nationality_country
                 ]
-                
+                # Append sick status and diseases contracted if applicable
                 data_row.append(patient.sick_status)
                 for disease in patient.diseases_contracted:
                     data_row.append(disease.nombre)
                 csv_writer.writerow(data_row)
         else:
+            # Write data rows to the CSV file without sick status and diseases contracted
             csv_writer.writerow(header_row)
             for patient in patients:
                 data_row = [

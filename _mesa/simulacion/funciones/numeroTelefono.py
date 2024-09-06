@@ -23,13 +23,20 @@
 
 import random
 
+# Function to generate a phone number based on the number of digits and city
 def numeroTelefono(cantidad_digitos, ciudad):
+    # Determine the minimum and maximum possible values based on the number of digits
     min_valor = 10 ** (cantidad_digitos - 1)  
     max_valor = (10 ** cantidad_digitos) - 1 
+    
+    # Generate a random number within the range
     digitos = random.randint(min_valor, max_valor)
+    
+    # Format the phone number with country code (+52), area code (ladas), and random digits
     numTelefono = "+52" + ladas(ciudad) + str(digitos)
     return numTelefono
 
+# Function to return the area code (lada) based on the city
 def ladas(case):
     if case == "Ensenada" or case == "ENSENADA": 
         return "(646)"
@@ -41,9 +48,9 @@ def ladas(case):
         return "(665)"
     elif case == "Playas de Rosarito" or case ==  "PLAYAS DE ROSARITO": 
         return "(661)"
-    elif case =="San Quintín" or case ==  "SAN QUINTÍN" or case ==  "SAN QUINTIN": 
+    elif case == "San Quintín" or case ==  "SAN QUINTÍN" or case ==  "SAN QUINTIN": 
         return "(616)"
     elif case == "San Felipe" or case ==  "SAN FELIPE": 
         return "(686)"
-    elif case =="Valle de Las Palmas" or case == "Valle de Las Palmas":
-        return "(665)"#
+    elif case == "Valle de Las Palmas" or case == "Valle de Las Palmas":
+        return "(665)"

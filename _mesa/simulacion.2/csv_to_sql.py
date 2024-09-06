@@ -22,9 +22,17 @@
 ######################################################################
 
 import csv
-import os
 
 def remove_bom(s):
+    """
+    Removes the Byte Order Mark (BOM) from a string if it exists.
+    
+    Args:
+        s (str): The input string that may contain a BOM.
+    
+    Returns:
+        str: The input string without the BOM.
+    """
     return s.replace('\ufeff', '')
 
 def csv_to_mysql(csv_file, table_name, output_file):
@@ -192,39 +200,52 @@ ALTER TABLE `mesapatient_data`
   MODIFY `id` bigint NOT NULL AUTO_INCREMENT;
 COMMIT;
 """
-    directory = "/PySEMR/_mesa/simulacion.2/patient_data/patient_data.csv"
-    
+
+    # Open the output file in write mode and write the CREATE TABLE SQL statement
     with open(output_file, 'w', encoding='utf8') as output:
         output.write(create_table_sql)
         
+    # Define an SQL statement to delete all records from the specified table
     delete_from_table_sql = f"DELETE FROM {table_name};"
 
-        
+    # Open the output file in append mode and add the DELETE statement
     with open(output_file, 'a', encoding='utf8') as output:
         output.write("\n\n" + delete_from_table_sql)
 
+    # Open the CSV file in read mode to process its content
     with open(csv_file, 'r', encoding='utf-8-sig') as file:
         reader = csv.reader(file)
+        # Read the header row to get column names
         columns = next(reader)
 
+    # Remove Byte Order Mark (BOM) if present in column names
     columns = [remove_bom(column) for column in columns]
 
+    # Prepare the INSERT INTO SQL statement with column names
     insert_into_sql = f"INSERT INTO {table_name} (`" + "`, `".join(columns) + "`) VALUES\n"
+
+    # Re-open the CSV file to read its data rows
     with open(csv_file, 'r', encoding='utf-8-sig') as file:
         reader = csv.reader(file)
+        # Skip the header row
         next(reader)
         rows = []
+        # Process each data row
         for row in reader:
             row_values = []
+            # Escape single quotes in each value and prepare it for SQL insertion
             for column, value in zip(columns, row):
                 value = value.replace("'", "''")
                 row_values.append(f"'{value}'")
+            # Combine row values into a SQL tuple
             row_str = ', '.join(row_values)
             rows.append(f"({row_str})")
+        # Append all rows to the INSERT INTO SQL statement
         insert_into_sql += ",\n".join(rows) + ";"
 
+    # Open the output file in append mode and add the INSERT INTO statement
     with open(output_file, 'a', encoding='utf8') as output:
-            output.write("\n\n" + insert_into_sql)
-            
+        output.write("\n\n" + insert_into_sql)
+
+    # Return the full SQL script containing CREATE TABLE, DELETE, and INSERT statements
     return create_table_sql + "\n\n" + delete_from_table_sql + "\n\n" + insert_into_sql
-    

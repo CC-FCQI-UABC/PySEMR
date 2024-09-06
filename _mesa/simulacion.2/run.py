@@ -25,8 +25,6 @@
 from flask import Flask, render_template, request
 from patient_model import PatientModel
 from sql_generator import *
-import pymysql
-import os
 
 # Define the Flask app with the correct static folder
 app = Flask(__name__, static_folder='templates/static')
@@ -38,9 +36,9 @@ def index():
 @app.route('/run_simulation', methods=['POST'])
 def run_simulation():
     patient_model = PatientModel()
-    patients, enfermos = patient_model.run_simulation()
+    patients, sick_patients = patient_model.run_simulation()
     generate_sql_from_patients(patients)
-    generate_insert_from_diseases(enfermos)
+    generate_insert_from_diseases(sick_patients)
     return "Simulation completed successfully"
 
 if __name__ == '__main__':

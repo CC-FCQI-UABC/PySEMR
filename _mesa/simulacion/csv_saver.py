@@ -24,12 +24,17 @@
 import csv
 import os
 
-def save_data_to_csv(patients, nombre_archivo, show_sick_status: bool = False):
+# Function to save patient data to a CSV file
+def save_data_to_csv(patients, file_name, show_sick_status: bool = False):
+    # Define the directory where the file will be saved
     directory = "PySEMR/_mesa/simulacion.2/patient_data"
     os.makedirs(directory, exist_ok=True)
 
-    with open(os.path.join(directory, nombre_archivo + '.csv'), 'w', newline='') as csvfile:
+    # Open the CSV file for writing
+    with open(os.path.join(directory, file_name + '.csv'), 'w', newline='') as csvfile:
         csv_writer = csv.writer(csvfile)
+
+        # Create the header row for the CSV file
         header_row = [
             "language", "fname", "mname", "lname",
             "DOB", "street", "postal_code", "city", "state", "country_code", "drivers_license",
@@ -39,9 +44,13 @@ def save_data_to_csv(patients, nombre_archivo, show_sick_status: bool = False):
             "homeless", "pid", "county", "sexual_orientation", "gender_identity",
             "street_line_2", "preferred_name", "nationality_country"
         ]
+
+        # If the sick status should be included, add the column
         if show_sick_status:
             header_row.append("sick_status")
             csv_writer.writerow(header_row)
+
+            # Write the data rows with sick status
             for patient in patients:
                 data_row = [
                     patient.personal_data.language,
@@ -55,11 +64,16 @@ def save_data_to_csv(patients, nombre_archivo, show_sick_status: bool = False):
                     patient.personal_data.county, patient.personal_data.sexual_orientation, patient.personal_data.gender_identity, patient.address_data.street_line_2,
                     patient.name_data.preferred_name, patient.personal_data.nationality_country
                 ]
-                
+
+                # Add sick status to the row
                 data_row.append(patient.sick_status)
                 csv_writer.writerow(data_row)
+
         else:
+            # Write the header row
             csv_writer.writerow(header_row)
+
+            # Write the data rows without sick status
             for patient in patients:
                 data_row = [
                     patient.personal_data.language,

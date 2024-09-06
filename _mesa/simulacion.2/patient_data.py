@@ -30,34 +30,41 @@ from datos_paciente.name_data import NameData
 from datos_paciente.contact_data import ContactData
 from datos_paciente.address_data import AddressData
 
+# patient_data.py
+from mesa import Agent
+import random
+
 class PatientData(Agent):
-    def __init__(self, model, pacientes_data, pid):
+    def __init__(self, model, patients_data, pid):
         super().__init__(pid, model)
-        self.personal_data = PersonalData(pacientes_data, pid)
-        self.name_data = NameData(pacientes_data, pid)
-        self.address_data = AddressData(pacientes_data, pid)
-        self.contact_data = ContactData(pacientes_data, pid)
+        # Initialize personal, name, address, and contact data for the patient
+        self.personal_data = PersonalData(patients_data, pid)
+        self.name_data = NameData(patients_data, pid)
+        self.address_data = AddressData(patients_data, pid)
+        self.contact_data = ContactData(patients_data, pid)
         self.diseases_contracted = []
         self.sick_status = False
 
     def step(self):
+        # Process each step: attempt to heal diseases and contract new ones if not sick
         self.heal_diseases()
         if not self.sick_status:
             self.contract_disease()
 
     def contract_disease(self):
+        # Attempt to contract new diseases based on their probability
         for disease in self.model.possible_diseases:
             probability = disease.calculate_probability(
-                self.model.ambiente.clima.temperature, 
-                self.model.ambiente.clima.season)
-            if disease.nombre == "COVID-19":
-                if random.random() < 0.0206:  # Estadistica implementada de la bibliografia
+                self.model.environment.climate.temperature, 
+                self.model.environment.climate.season)
+            if disease.name == "COVID-19":
+                if random.random() < 0.0206:  # Statistical probability from the bibliography
                     if disease not in self.diseases_contracted:
                         if len(self.diseases_contracted) < 3:
                             disease.contracted_on = self.model.schedule.time 
                             self.diseases_contracted.append(disease) 
                             self.sick_status = True
-                            self.model.enfermos.append(self)
+                            self.model.sick_patients.append(self)
                         else:
                             break
             else:
@@ -67,38 +74,39 @@ class PatientData(Agent):
                             disease.contracted_on = self.model.schedule.time 
                             self.diseases_contracted.append(disease) 
                             self.sick_status = True
-                            self.model.enfermos.append(self)
+                            self.model.sick_patients.append(self)
                             break
                         else:
                             break
     
     def calculate_healing_probability(self, disease, temperature, season, days_since_contracted):
+        # Calculate the probability of healing based on various factors
         base_probability = 0.9
-        if disease.nombre == "Influenza":
+        if disease.name == "Influenza":
             base_probability *= 1.1
-        elif disease.nombre == "Resfriado":
+        elif disease.name == "Cold":
             base_probability *= 1.05
         if temperature > 25:
             base_probability *= 1.1
         elif temperature < 10:
             base_probability *= 0.95
-        if season == "Invierno":
+        if season == "Winter":
             base_probability *= 0.85
-        elif season == "Verano":
+        elif season == "Summer":
             base_probability *= 1.15
         if days_since_contracted > 14:
             base_probability *= 1.1
         base_probability = min(base_probability, 1.0)
         return base_probability
-        
 
     def heal_diseases(self):
+        # Attempt to heal contracted diseases
         for disease in self.diseases_contracted:
-            if disease.nombre == "COVID-19":
+            if disease.name == "COVID-19":
                 days_since_contracted = self.days_since_contracted(disease)
                 if days_since_contracted is not None and days_since_contracted > 4:
-                    if random.random() < 0.016025:  # Estadistica implementada de la bibliografia
-                        self.model.fallecidos += 1
+                    if random.random() < 0.016025:  # Statistical probability from the bibliography
+                        self.model.deceased += 1
                         self.model.schedule.remove(self)
                         return
                 else:
@@ -110,10 +118,11 @@ class PatientData(Agent):
                 self.heal_normal_disease(disease)
 
     def heal_normal_disease(self, disease):
+        # Heal a normal disease based on calculated probability
         healing_probability = self.calculate_healing_probability(
             disease,
-            self.model.ambiente.clima.temperature,
-            self.model.ambiente.clima.season,
+            self.model.environment.climate.temperature,
+            self.model.environment.climate.season,
             self.days_since_contracted(disease)
         )
         if random.random() < healing_probability:
@@ -122,7 +131,8 @@ class PatientData(Agent):
                 self.sick_status = False
 
     def days_since_contracted(self, disease):
+        # Calculate the number of days since the disease was contracted
         for contracted_disease in self.diseases_contracted:
-            if contracted_disease.nombre == disease:
+            if contracted_disease.name == disease:
                 return self.model.schedule.time - contracted_disease.contracted_on
         return 0

@@ -21,16 +21,23 @@
 ## Status: Released.
 ######################################################################
 
-#run.py
+# run.py
 from csv_saver import save_data_to_csv
 from patient_model import PatientModel
 from domicilios_data import domiciliosData
 
+# Initialize the domicilios data object
 domicilios = domiciliosData()
 
+# Create an instance of PatientModel with the domicilios data
 patient_model = PatientModel(domicilios.get_data())
 
+# Run the simulation
 patient_model.run_simulation()
 
+# Save the data of all patients to a CSV file named 'patient_data'
 save_data_to_csv(patient_model.patients, 'patient_data')
+
+# Save the data of patients with diseases to a CSV file named 'diseased_patients'
+# The 'True' argument indicates that this data is filtered (diseased patients)
 save_data_to_csv(patient_model.enfermos, 'diseased_patients', True)

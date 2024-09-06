@@ -21,35 +21,25 @@
 ## Status: Released.
 ######################################################################
 
-# server.py
-from mesa.visualization.modules import CanvasGrid
-from mesa.visualization.ModularVisualization import ModularServer
+# run.py
+from flask import Flask, render_template, request
 from patient_model import PatientModel
-from patient_data import PatientData
+from sql_generator import *
 
-def agent_portrayal(agent):
-    if isinstance(agent, PatientData):
-        portrayal = {
-            "Shape": "circle",
-            "Color": "red" if agent.sick_status else "green",
-            "Filled": "true",
-            "Layer": 0,
-            "r": 0.5
-        }
-        return portrayal
-    return {}
+# Define the Flask app with the correct static folder
+app = Flask(__name__, static_folder='templates/static')
 
-# Calcular tamaño de la cuadrícula basado en el número de pacientes
-model = PatientModel()
-grid_size = model.calculate_grid_size(len(model.pacientesData['data']))
-grid = CanvasGrid(agent_portrayal, grid_size, grid_size, 500, 500)
+@app.route('/')
+def index():
+    return render_template('index.html')
 
-server = ModularServer(
-    PatientModel,
-    [grid],
-    "Patient Model",
-    {}
-)
+@app.route('/run_simulation', methods=['POST'])
+def run_simulation():
+    patient_model = PatientModel()
+    patients, sick_patients = patient_model.run_simulation()
+    generate_sql_from_patients(patients)
+    generate_insert_from_diseases(sick_patients)
+    return "Simulation completed successfully"
 
-server.port = 8521
-server.launch()
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=8081, debug=True)

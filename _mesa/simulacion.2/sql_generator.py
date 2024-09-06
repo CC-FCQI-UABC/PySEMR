@@ -21,24 +21,21 @@
 ## Status: Released.
 ######################################################################
 
-import os
-
 def divide_list_into_chunks(lst, n):
-    """Divide una lista en n partes aproximadamente iguales."""
+    """Divide a list into n approximately equal parts."""
     size = (len(lst) + n - 1) // n
     return [lst[i:i+size] for i in range(0, len(lst), size)]
 
-def generate_insert_from_diseases(enfermos):
+def generate_insert_from_diseases(sick_patients):
     output_file = "/home/ec2-user/environment/PySEMR/_mesa/simulacion.2/patient_data/insert_into_diseases_list.sql"
     insert_into_sql = "INSERT INTO lists (type, title, pid, verification, list_option_id) VALUES\n"
-    for enfermo in enfermos:
-        for disease in enfermo.diseases_contracted:
-            insert_into_sql += "('medical_problem', '{}', {}, 'confirmed', '{}'),\n".format(disease, enfermo.personal_data.pid, disease)
-    # Eliminar la coma y el salto de línea finales innecesarios
+    for sick_patient in sick_patients:
+        for disease in sick_patient.diseases_contracted:
+            insert_into_sql += "('medical_problem', '{}', {}, 'confirmed', '{}'),\n".format(disease, sick_patient.personal_data.pid, disease)
+    # Remove the trailing comma and newline
     insert_into_sql = insert_into_sql.rstrip(",\n")
     with open(output_file, 'w', encoding='utf8') as output:
         output.write(insert_into_sql)
-    
 
 def generate_sql_from_patients(patients):
     # Script to create the table
@@ -177,18 +174,25 @@ def generate_sql_from_patients(patients):
     
     ALTER TABLE mesapatient_data AUTO_INCREMENT = 0;
     """
-
+    # Divide the list of patients into chunks of 10
     patients_chunks = divide_list_into_chunks(patients, 10)
 
     for i, chunk in enumerate(patients_chunks, start=1):
+        # Define the output file path for the current chunk
         output_file = f"/home/ec2-user/environment/PySEMR/_mesa/simulacion.2/patient_data/create_mesapatient_data_table_{i}.sql"
+        
         if i == 1:
-            delete_from_table = "DELETE FROM mesapatient data;"
+            # Delete existing records from the table if this is the first chunk
+            delete_from_table = "DELETE FROM mesapatient_data;"
             with open(output_file, 'w', encoding='utf8') as output:
                 output.write(delete_from_table)
                 output.write("\n\n")
+        
+        # SQL command to insert data into the mesapatient_data table
         insert_into_sql = "INSERT INTO mesapatient_data (language, fname, mname, lname, DOB, street, postal_code, city, state, country_code, drivers_license, ss, occupation, phone_home, phone_biz, phone_contact, phone_cell, status, contact_relationship, date, sex, email, email_direct, ethnoracial, race, ethnicity, religion, family_size, monthly_income, homeless, pid, county, sexual_orientation, gender_identity, street_line_2, preferred_name, nationality_country) VALUES\n"
+        
         for patient in chunk:
+            # Create a row of data for each patient
             data_row = [
                 patient.personal_data.language,
                 patient.name_data.fname, patient.name_data.mname, patient.name_data.lname, patient.personal_data.DOB,
@@ -201,11 +205,15 @@ def generate_sql_from_patients(patients):
                 patient.personal_data.county, patient.personal_data.sexual_orientation, patient.personal_data.gender_identity, patient.address_data.street_line_2,
                 patient.name_data.preferred_name, patient.personal_data.nationality_country
             ]
+            # Format each value in the data_row as a string for SQL insertion
             data_row = [f"'{val}'" if isinstance(val, str) else str(val) for val in data_row]
             insert_into_sql += "({}),\n".format(', '.join(data_row))
+        
+        # Remove the trailing comma and newline
         insert_into_sql = insert_into_sql.rstrip(",\n")
 
         with open(output_file, 'w', encoding='utf8') as output:
+            # Write the SQL commands to the file
             output.write(create_table_sql)
             output.write("\n\n")
             output.write(insert_into_sql + ";")

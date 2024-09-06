@@ -27,19 +27,22 @@ class domiciliosData:
     def __init__(self):
         self.data = None
         try:
-            # Realiza una solicitud GET al servidor Flask para obtener los datos
+            # Perform a GET request to the Flask server to fetch the data
             response = requests.get('http://localhost:5000/data')
 
-            # Verifica si la solicitud fue exitosa (código de estado 200)
+            # Check if the request was successful (HTTP status code 200)
             if response.status_code == 200:
-                # Extrae los datos del cuerpo de la respuesta JSON
+                # Extract the data from the JSON response body
                 Data = response.json()
-                # Almacena los datos en el objeto de almacenamiento
+                # Store the data in the object's attribute
                 self.data = Data
             else:
-                print("Error al obtener los datos:", response.text)
+                # Print an error message if the request was not successful
+                print("Error getting data:", response.text)
         except Exception as e:
-            print("Error al conectarse al servidor:", e)
+            # Print an error message if there was an exception connecting to the server
+            print("Error connecting to the server:", e)
     
     def get_data(self):
+        # Return the stored data
         return self.data

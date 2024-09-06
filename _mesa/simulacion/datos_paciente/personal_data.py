@@ -21,10 +21,7 @@
 ## Status: Released.
 ######################################################################
 
-import sys
-import os
-from mesa import Agent, Model
-from funciones import randomizer, numeroTelefono, licenciaConducir
+from funciones import randomizer, licenciaConducir
 from faker import Faker
 import random
 import datetime

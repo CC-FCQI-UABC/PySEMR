@@ -21,8 +21,6 @@
 ## Status: Released.
 ######################################################################
 
-from funciones import randomizer
-import random
 from faker import Faker
 
 fake = Faker('es_MX')

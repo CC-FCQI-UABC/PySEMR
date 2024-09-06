@@ -24,59 +24,62 @@
 import csv
 import os
 
-# Función para leer el archivo CSV y procesar los nombres masculinos
+# Function to read the CSV file and process male or female names
 def get_names_from_csv(file_path, idx):
     names = []
     with open(file_path, newline='', encoding='utf-8') as csvfile:
         csv_reader = csv.reader(csvfile)
-        # Saltar la cabecera
+        # Skip the header row
         next(csv_reader)
         for row in csv_reader:
-            # Obtener el nombre de la columna especificada
+            # Get the name from the specified column
             name = row[idx]
-            # Dividir el nombre si contiene dos cadenas
+            # Split the name if it contains multiple parts
             split_names = name.split()
-            # Procesar cada parte del nombre
+            # Process each part of the name
             for part in split_names:
-                # Convertir la primera letra a mayúscula y el resto a minúscula
+                # Capitalize the first letter, and lowercase the rest
                 processed_name = part.capitalize() if len(part) == 1 else part[0].upper() + part[1:].lower()
-                # Agregar el nombre procesado a la lista
+                # Add the processed name to the list
                 names.append(processed_name)
     return names
 
-# Nombre del archivo CSV
+# Name of the CSV file
 csv_file_name = "Nombres_mas_populares_2021.csv"
 
-# Ruta completa del archivo CSV
+# Full path to the CSV file
 csv_file_path = os.path.join(os.path.dirname(__file__), csv_file_name)
 
-# Obtener nombres masculinos del archivo CSV
+# Get male names from the CSV file (assuming column index 7 for male names)
 male_names = get_names_from_csv(csv_file_path, 7)
 
+# Get female names from the CSV file (assuming column index 1 for female names)
 female_names = get_names_from_csv(csv_file_path, 1)
 
-# Nombre del archivo CSV de salida
+# Name of the output CSV file for male names
 output_csv_file_name = "male_names_processed.csv"
 
+# Name of the output CSV file for female names
 output_csv_file_name_2 = "female_names_processed.csv"
 
-# Ruta completa del archivo CSV de salida
+# Full path to the output CSV file for male names
 output_csv_file_path = os.path.join(os.path.dirname(__file__), output_csv_file_name)
 
+# Full path to the output CSV file for female names
 output_csv_file_path_2 = os.path.join(os.path.dirname(__file__), output_csv_file_name_2)
 
-# Escribir los nombres masculinos procesados en un nuevo archivo CSV
+# Write the processed male names to a new CSV file
 with open(output_csv_file_path, 'w', newline='', encoding='utf-8') as csvfile:
     csv_writer = csv.writer(csvfile)
     for name in male_names:
         csv_writer.writerow([name])
 
-print("Se ha creado el archivo 'male_names_processed.csv' con los nombres masculinos procesados.")
+print("The file 'male_names_processed.csv' has been created with the processed male names.")
 
-# Escribir los nombres masculinos procesados en un nuevo archivo CSV
+# Write the processed female names to a new CSV file
 with open(output_csv_file_path_2, 'w', newline='', encoding='utf-8') as csvfile:
     csv_writer = csv.writer(csvfile)
     for name in female_names:
         csv_writer.writerow([name])
-        
-print("Se ha creado el archivo 'female_names_processed.csv' con los nombres masculinos procesados.")
+
+print("The file 'female_names_processed.csv' has been created with the processed female names.")

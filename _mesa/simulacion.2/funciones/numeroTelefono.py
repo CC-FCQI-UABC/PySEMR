@@ -23,27 +23,29 @@
 
 import random
 
+# Function to generate a random phone number with the specified number of digits and city code
 def numeroTelefono(cantidad_digitos, ciudad):
-    min_valor = 10 ** (cantidad_digitos - 1)  
-    max_valor = (10 ** cantidad_digitos) - 1 
-    digitos = random.randint(min_valor, max_valor)
-    numTelefono = "+52" + ladas(ciudad) + str(digitos)
+    min_valor = 10 ** (cantidad_digitos - 1)  # Calculate the minimum value for the specified number of digits
+    max_valor = (10 ** cantidad_digitos) - 1  # Calculate the maximum value for the specified number of digits
+    digitos = random.randint(min_valor, max_valor)  # Generate a random number within the specified range
+    numTelefono = "+52" + ladas(ciudad) + str(digitos)  # Construct the phone number with country code and city code
     return numTelefono
 
+# Function to get the city code based on the city name
 def ladas(case):
     if case == "Ensenada" or case == "ENSENADA": 
-        return "(646)"
-    elif case == "Tijuana" or case ==  "TIJUANA": 
-        return "(664)"
-    elif case == "Mexicali" or case ==  "MEXICALI": 
-        return "(686)"
-    elif case == "Tecate" or case ==  "TECATE": 
-        return "(665)"
-    elif case == "Playas de Rosarito" or case ==  "PLAYAS DE ROSARITO": 
-        return "(661)"
-    elif case =="San Quintín" or case ==  "SAN QUINTÍN" or case ==  "SAN QUINTIN": 
-        return "(616)"
-    elif case == "San Felipe" or case ==  "SAN FELIPE": 
-        return "(686)"
-    elif case =="Valle de Las Palmas" or case == "Valle de Las Palmas":
-        return "(665)"#
+        return "(646)"  # City code for Ensenada
+    elif case == "Tijuana" or case == "TIJUANA": 
+        return "(664)"  # City code for Tijuana
+    elif case == "Mexicali" or case == "MEXICALI": 
+        return "(686)"  # City code for Mexicali
+    elif case == "Tecate" or case == "TECATE": 
+        return "(665)"  # City code for Tecate
+    elif case == "Playas de Rosarito" or case == "PLAYAS DE ROSARITO": 
+        return "(661)"  # City code for Playas de Rosarito
+    elif case == "San Quintín" or case == "SAN QUINTÍN" or case == "SAN QUINTIN": 
+        return "(616)"  # City code for San Quintín
+    elif case == "San Felipe" or case == "SAN FELIPE": 
+        return "(686)"  # City code for San Felipe
+    elif case == "Valle de Las Palmas" or case == "Valle de Las Palmas":
+        return "(665)"  # City code for Valle de Las Palmas

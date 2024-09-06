@@ -21,35 +21,41 @@
 ## Status: Released.
 ######################################################################
 
-# clima.py
 from mesa import Agent
 import random
 
 class Clima(Agent):
     def __init__(self, unique_id, model):
         super().__init__(unique_id, model)
+        # Initialize temperature, season, and traffic level
         self.temperature = 20
-        self.season = "Primavera"
+        self.season = "Spring"
         self.traffic_level = 0
 
     def step(self):
+        # Simulate changes in season and traffic level
         self.simulate_season_change()
         self.simulate_traffic()
 
     def simulate_season_change(self):
-        seasons = ["Primavera", "Verano", "Otoño", "Invierno"]
+        # List of possible seasons
+        seasons = ["Spring", "Summer", "Autumn", "Winter"]
+        # Determine the index of the current season and the next season
         current_season_index = seasons.index(self.season)
         next_season_index = (current_season_index + 1) % len(seasons)
+        # Update the season
         self.season = seasons[next_season_index]
 
-        if self.season == "Primavera":
+        # Adjust temperature based on the new season
+        if self.season == "Spring":
             self.temperature = random.randint(15, 25)
-        elif self.season == "Verano":
+        elif self.season == "Summer":
             self.temperature = random.randint(25, 35)
-        elif self.season == "Otoño":
+        elif self.season == "Autumn":
             self.temperature = random.randint(10, 20)
-        elif self.season == "Invierno":
+        elif self.season == "Winter":
             self.temperature = random.randint(0, 10)
 
     def simulate_traffic(self):
+        # Randomly set the traffic level between 0 and 100
         self.traffic_level = random.randint(0, 100)

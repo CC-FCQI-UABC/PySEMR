@@ -28,9 +28,20 @@ fake = Faker('es_MX')
 
 class ContactData:
     def __init__(self, city):
+        # Generate a random home phone number for the specified city
         self.phone_home = numeroTelefono.numeroTelefono(7, city)
+        
+        # Generate a random business phone number for the specified city
         self.phone_biz = numeroTelefono.numeroTelefono(7, city)
+        
+        # Generate a random contact phone number for the specified city
         self.phone_contact = numeroTelefono.numeroTelefono(7, city)
+        
+        # Generate a random cell phone number for the specified city
         self.phone_cell = numeroTelefono.numeroTelefono(7, city)
+        
+        # Generate a random email address
         self.email = fake.free_email()
+        
+        # Set the direct email to be the same as the random email
         self.email_direct = self.email
