@@ -23,7 +23,6 @@
 
 from flask import Flask, jsonify
 from sqlalchemy import create_engine, text
-import sqlalchemy.exc
 
 # Initialize the Flask application
 app = Flask(__name__)
