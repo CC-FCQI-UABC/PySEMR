@@ -27,25 +27,28 @@ from faker import Faker
 fake = Faker('es_MX')
 
 class NameData:
-    def __init__(self, gender):
+    def __init__(self, gender, Dataset):
         # Ensure gender is either "Male" or "Female"; if not, choose randomly
         if gender not in ["Male", "Female"]:
             gender = random.choice(["Male", "Female"])
         
         # Assign title and names based on gender
         self.title = self.Title(gender)
-        self.fname = self.nameAssign(gender)
-        self.lname = fake.last_name() + " " + fake.last_name()
-        self.mname = self.nameAssign(gender)
+        self.fname = self.nameAssign(gender, Dataset)
+        apellidos = Dataset["data"]["LastNames"]
+        self.lname = random.choice(apellidos)["apellido"]
+        self.mname = self.nameAssign(gender, Dataset)
         self.preferred_name = random.choice([self.fname, self.mname])
     
-    def nameAssign(self, gender):
+    def nameAssign(self, gender, Dataset):
         # Randomly select a name based on gender
         name = ""
         if gender == "Male":
-            name = randomizer.randomize('male_names_processed.csv')
+            male_names = Dataset["data"]["MaleNames"]
+            name = random.choice(male_names)["Nombre"]
         elif gender == "Female":
-            name = randomizer.randomize('female_names_processed.csv')
+            female_names = Dataset["data"]["FemaleNames"]
+            name = random.choice(female_names)["Nombre"] 
         return name
     
     def Title(self, gender):

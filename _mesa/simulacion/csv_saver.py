@@ -27,7 +27,7 @@ import os
 # Function to save patient data to a CSV file
 def save_data_to_csv(patients, file_name, show_sick_status: bool = False):
     # Define the directory where the file will be saved
-    directory = "PySEMR/_mesa/simulacion.2/patient_data"
+    directory = "PySEMR/_mesa/simulacion/patient_data"
     os.makedirs(directory, exist_ok=True)
 
     # Open the CSV file for writing

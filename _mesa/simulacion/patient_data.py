@@ -32,12 +32,12 @@ from datos_paciente.address_data import AddressData
 
 # Define the PatientData class inheriting from Mesa's Agent
 class PatientData(Agent):
-    def __init__(self, model, domicilios_data, pid):
+    def __init__(self, model, Dataset, pid):
         super().__init__(pid, model)
         # Initialize personal data, name data, address data, and contact data
         self.personal_data = PersonalData(pid)
-        self.name_data = NameData(self.personal_data.sex)
-        self.address_data = AddressData(domicilios_data)
+        self.name_data = NameData(self.personal_data.sex, Dataset)
+        self.address_data = AddressData(Dataset)
         self.contact_data = ContactData(self.address_data.city)
         self.diseases_contracted = []  # List to keep track of diseases contracted
         self.sick_status = False  # Boolean flag indicating if the patient is sick
@@ -53,7 +53,7 @@ class PatientData(Agent):
         # Iterate over possible diseases to check if the patient contracts any
         for disease in self.model.possible_diseases:
             # Calculate the probability of contracting the disease
-            probability = disease.calculate_probability(self.model.ambiente.clima.temperature, self.model.ambiente.clima.season)
+            probability = disease.calculate_probability(self.model.ambiente.climate.temperature, self.model.ambiente.climate.season)
             if random.random() < probability:
                 if disease not in self.diseases_contracted:  # Check if the disease is already contracted
                     if len(self.diseases_contracted) < 3:
@@ -68,8 +68,8 @@ class PatientData(Agent):
         for disease in self.diseases_contracted:
             healing_probability = self.calculate_healing_probability(
                 disease,
-                self.model.ambiente.clima.temperature,
-                self.model.ambiente.clima.season,
+                self.model.ambiente.climate.temperature,
+                self.model.ambiente.climate.season,
                 self.days_since_contracted(disease)
             )
             if random.random() < healing_probability:

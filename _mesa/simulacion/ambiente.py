@@ -23,14 +23,14 @@
 
 # environment.py
 from mesa import Agent
-from clima import Clima
+from clima import Climate
 
 # Define the Environment agent class
 class Environment(Agent):
     def __init__(self, unique_id, model):
         super().__init__(unique_id, model)
         # Create an instance of the Climate agent
-        self.climate = Clima(unique_id, model)
+        self.climate = Climate(unique_id, model)
         # Add the Climate agent to the model's schedule
         model.schedule.add(self.climate)
 

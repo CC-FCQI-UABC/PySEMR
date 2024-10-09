@@ -27,32 +27,50 @@ from sqlalchemy import create_engine, text
 # Initialize the Flask application
 app = Flask(__name__)
 
-DB_USER = 'master'
-DB_PASSWORD = 'elkomba2'
-DB_HOST = 'database-1.cpgwsuckign8.us-east-2.rds.amazonaws.com'
-DB_NAME = 'domicilios_tijuana'
+DB_USER = 'openemr'
+DB_PASSWORD = 'root'
+DB_HOST = 'localhost'
+DB_NAME = 'emr_datasets'
 DB_URI = f"mysql+mysqlconnector://{DB_USER}:{DB_PASSWORD}@{DB_HOST}/{DB_NAME}"
 engine = create_engine(DB_URI)
+
+def query_to_dict_list(results, dataset_list):
+    columns = list(results.keys())
+    for row in results:
+        data_dict = {}
+        for i in range(len(row)):
+            data_dict[columns[i]] = row[i]
+        dataset_list.append(data_dict)   
 
 @app.route('/data')
 def obtener_data():
     try:
-        
         with engine.connect() as connection:
             
-            query = text('SELECT * FROM domicilios')
+            query_address = text('SELECT * FROM address limit 50000;')
+            query_female_names = text('SELECT * FROM female_names;')
+            query_male_names = text('SELECT * FROM male_names;')
+            query_last_names = text('SELECT * FROM apellidos;')
 
-            resultados = connection.execute(query)
-            
-            data = []
-            column_names = list(resultados.keys())
-            for row in resultados:
-                data_dict = {}
-                for i in range(len(row)):
-                    data_dict[column_names[i]] = row[i]
-                data.append(data_dict)
+            address_results = connection.execute(query_address)
+            female_names_results = connection.execute(query_female_names)
+            male_names_results = connection.execute(query_male_names)
+            last_names_results = connection.execute(query_last_names)
+
+            data = {
+                "Address": [],
+                "FemaleNames": [],
+                "MaleNames": [],
+                "LastNames": []
+            }
+
+            query_to_dict_list(address_results, data["Address"])
+            query_to_dict_list(female_names_results, data["FemaleNames"])
+            query_to_dict_list(male_names_results, data["MaleNames"])
+            query_to_dict_list(last_names_results, data["LastNames"])
 
             return jsonify({"status": "success", "data": data})
+    
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)})
 

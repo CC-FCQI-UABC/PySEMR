@@ -25,18 +25,18 @@
 from mesa.time import RandomActivation
 from mesa import Model
 from patient_data import PatientData
-from ambiente import Ambiente
+from ambiente import Environment
 from enfermedad import Enfermedad
-from domicilios_data import domiciliosData
+from Dataset import Dataset
 
 # Define the PatientModel class inheriting from Mesa's Model
 class PatientModel(Model):
-    def __init__(self, domiciliosData):
+    def __init__(self, Dataset):
         super().__init__()
         self.patients = []  # List to store all patient agents
         self.schedule = RandomActivation(self)  # Scheduler to manage agent activation
-        self.ambiente = Ambiente(1, self)  # Environment object
-        self.domicilios = domiciliosData  # Domicilios data for address information
+        self.ambiente = Environment(1, self)  # Environment object
+        self.datasetData = Dataset  # Dataset for random information
         # List of possible diseases with their probabilities and affected seasons
         self.possible_diseases = [
             Enfermedad("Gripe", 0.1, ["Invierno", "Otoño"]),
@@ -71,7 +71,7 @@ class PatientModel(Model):
     def add_random_patients(self, num_patients):
         # Add a specified number of random patients to the model
         for _ in range(num_patients):
-            patient = PatientData(self, self.domicilios, len(self.patients))
+            patient = PatientData(self, self.datasetData, len(self.patients))
             self.patients.append(patient)
 
     def remove_cured_patients(self):
