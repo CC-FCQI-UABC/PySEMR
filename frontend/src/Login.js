@@ -1,3 +1,4 @@
+// Login.js
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import './Login.css';
@@ -6,7 +7,7 @@ function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
-  const navigate = useNavigate(); // Hook para redirigir
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -20,7 +21,7 @@ function Login() {
       });
       const data = await response.json();
       if (response.ok) {
-        navigate("/grid"); // Redirige a la página del grid después del login
+        navigate("/simulation", { state: { username } }); // Pasa el username a Simulation
       } else {
         setErrorMessage(data.message);
       }

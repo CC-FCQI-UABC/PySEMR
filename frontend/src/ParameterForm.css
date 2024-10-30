@@ -1,0 +1,94 @@
+.ParameterForm {
+  margin: 20px;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.ParameterForm h2 {
+  margin-bottom: 15px;
+}
+
+.ParameterForm div {
+  margin-bottom: 10px;
+}
+
+.ParameterForm label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+.ParameterForm input {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+}
+
+.ParameterForm button {
+  padding: 10px 15px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+.ParameterForm button:hover {
+  background-color: #0056b3;
+}
+
+.simulation-container {
+  display: flex;
+  justify-content: flex-end; /* Mover el formulario y los resultados a la derecha */
+  padding: 20px;
+}
+
+.simulation-container {
+  display: flex;
+  justify-content: flex-end; /* Mover el formulario a la derecha */
+  padding: 20px;
+}
+
+.ParameterForm {
+  width: 300px;
+}
+
+/* Estilos del modal */
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-content {
+  background-color: white;
+  padding: 20px;
+  border-radius: 10px;
+  text-align: center;
+  width: 400px;
+}
+
+.modal-content h3 {
+  margin-top: 0;
+}
+
+.modal-content button {
+  margin-top: 20px;
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.modal-content button:hover {
+  background-color: #0056b3;
+}

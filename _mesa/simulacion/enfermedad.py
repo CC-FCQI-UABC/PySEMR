@@ -23,9 +23,9 @@
 
 class Enfermedad:
     def __init__(self, nombre, probabilidad_inicial, estaciones_afectadas):
-        self.nombre = nombre
-        self.probabilidad_inicial = probabilidad_inicial
-        self.estaciones_afectadas = estaciones_afectadas
+        self.name = nombre
+        self.base_probability = probabilidad_inicial
+        self.seasonality = estaciones_afectadas
         self.contracted_on = None  # Added attribute to track the date of contracting
 
     def calculate_probability(self, temperature, season):
