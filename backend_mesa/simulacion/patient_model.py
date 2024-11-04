@@ -28,8 +28,12 @@ from patient_data import PatientData
 from ambiente import Environment
 from enfermedad import Enfermedad
 from Dataset import Dataset
+import matplotlib
+matplotlib.use('Agg')  # Use a non-interactive backend
+
 import matplotlib.pyplot as plt
 import numpy as np
+import os
 
 class PatientModel(Model):
     def __init__(self, Dataset):
@@ -56,53 +60,60 @@ class PatientModel(Model):
 
     def run_simulation(self, parameters):
         # Ejecuta la simulación durante 365 días
-        for day in range(365):
+        season = ""
+        for day in range(parameters['dias']):
             print(f"Day {day + 1}")
-            self.step(parameters)  # Ejecutar un paso del modelo
+            if (0 <= day <= 90):
+                season = "Winter"
+            elif (91 <= day <= 182):
+                season = "Spring"
+            elif (183 <= day <= 274):
+                season = "Summer"
+            elif (275 <= day <= 365):
+                season = "Autumn"
+            self.step(parameters, season)  # Ejecutar un paso del modelo
         
         self.plot_seasonal_data()  # Graficar los resultados al final de la simulación
         return self.patients  # Retorna la lista de pacientes
     
-    def step(self, parameters):
+    def step(self, parameters, season):
         try:
-            self.ambiente.step()  # Ejecutar el paso del ambiente
             self.add_random_patients(parameters["pacientes_por_dia"])  # Agregar pacientes aleatorios
             
             # Impresión de depuración
             print(f"Total pacientes después de agregar: {len(self.patients)}")
             
-            self.update_seasonal_counts()  # Actualizar los conteos estacionales
+            self.update_seasonal_counts(season)  # Actualizar los conteos estacionales
             for patient in self.patients:
-                patient.step()  # Ejecutar paso del paciente
+                patient.step(season)  # Ejecutar paso del paciente
+                if patient.sick_status == True:
+                    self.enfermos.append(patient)
 
             self.remove_cured_patients()  # Eliminar pacientes curados
         except Exception as e:
             print(f"Error en el día {self.schedule.time}: {e}")
-
 
     def add_random_patients(self, num_patients):
         # Agregar un número específico de pacientes aleatorios al modelo
         for _ in range(num_patients):
             patient = PatientData(self, self.datasetData, len(self.patients))
             self.patients.append(patient)
-    
-            if patient.sick_status == True:  # Modificar esto según cómo determines si está enfermo
-                self.enfermos.append(patient)
-
 
     def remove_cured_patients(self):
-        # Filtrar la lista de pacientes para eliminar a los que están curados
-        self.enfermos = [patient for patient in self.enfermos if patient.sick_status == True]
-        self.patients = [patient for patient in self.patients if patient.sick_status == False]
+        # Eliminar de la lista de enfermos aquellos que se han curado
+        self.enfermos = [patient for patient in self.enfermos if patient.sick_status == False]
+        # Mantener todos los pacientes, pero actualizar solo el estado de salud
+        self.patients = [patient for patient in self.patients]
 
-    def update_seasonal_counts(self):
+    def update_seasonal_counts(self, season):
         # Actualiza el conteo de pacientes enfermos por estación
-        current_season = self.ambiente.climate.season  # Obtener la estación actual
-        # Solo sumar los enfermos que son parte de los pacientes actuales
-        self.season_counts[current_season] += sum(1 for patient in self.patients if patient.sick_status)
+
+        self.season_counts[season] = sum(1 for patient in self.patients if patient.sick_status)
+        
         print(f"Pacientes totales: {len(self.patients)}")
+        print(f"Pacientes enfermos: {sum(1 for p in self.enfermos)}")
         print(f"Pacientes enfermos: {sum(1 for p in self.patients if p.sick_status == True)}")
-        print(f"Estación actual: {current_season}")
+        print(f"Estación actual: {season}")
 
 
     def plot_seasonal_data(self):
@@ -112,14 +123,23 @@ class PatientModel(Model):
         print(seasons)
         print(counts)
 
-        plt.figure(figsize=(10, 6))
         plt.bar(seasons, counts, color=['blue', 'green', 'yellow', 'orange'])
-        plt.title("Número de Pacientes Enfermos según la Estación del Año")
-        plt.xlabel("Estación")
-        plt.ylabel("Número de Pacientes Enfermos")
+        plt.title("Number of patients sick throughout the year according to each season")
+        plt.xlabel("Season")
+        plt.ylabel("Number of sick patients")
         plt.xticks(rotation=45)
         plt.grid(axis='y')
 
-        # Guardar la imagen y mostrarla
-        plt.savefig('seasonal_patient_counts.png')  # Guardar como imagen
-        plt.show()  # Mostrar la gráfica en pantalla
+        # Definir la ruta completa a la carpeta 'frontend/src'
+        image_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', 'frontend', 'src'))
+        image_path = os.path.join(image_dir, 'seasonal_patient_counts.png')
+        
+        # Crear el directorio si no existe
+        os.makedirs(image_dir, exist_ok=True)
+
+        # Guardar la imagen en el directorio especificado
+        plt.savefig(image_path)
+        plt.close()  # Cerrar la figura para liberar memoria
+
+        print(f"Imagen guardada en: {image_path}")
+        return image_path  # Retornar la ruta de la imagen para que el frontend la use

@@ -34,7 +34,7 @@ def run_simulation():
         # Prepara la respuesta
         response_data = {
             "message": "Simulation executed.",
-            "days_simulated": 365,
+            "days_simulated": parameters['dias'],
             "patients_generated": len(patient_model.patients),
             "image_path": "seasonal_patient_counts.png"
         }

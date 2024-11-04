@@ -29,12 +29,9 @@ from clima import Climate
 class Environment(Agent):
     def __init__(self, unique_id, model):
         super().__init__(unique_id, model)
-        # Create an instance of the Climate agent
-        self.climate = Climate(unique_id, model)
-        # Add the Climate agent to the model's schedule
-        model.schedule.add(self.climate)
+        pass
 
     # Define the step function for the Environment agent
     def step(self):
         # Execute the step function for the Climate agent
-        self.climate.step()
+        pass

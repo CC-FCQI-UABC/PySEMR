@@ -95,15 +95,17 @@ function UserManagementModal({ onClose }) {
           />
           <button type="submit">{editingUser ? "Actualizar Usuario" : "Crear Usuario"}</button>
         </form>
+        <div className="user-list-container">
         <h3>Lista de Usuarios</h3>
-        <ul>
-          {users.map((user) => (
-            <li key={user.id}>
-              {user.username} 
-              <button onClick={() => handleDelete(user.id)}>Eliminar</button>
-            </li>
-          ))}
-        </ul>
+          <ul>
+            {users.map((user) => (
+              <li key={user.id}>
+                {user.username} 
+                <button onClick={() => handleDelete(user.username)}>Eliminar</button>
+              </li>
+            ))}
+          </ul>
+        </div>
         <button onClick={onClose}>Cerrar</button>
       </div>
     </div>

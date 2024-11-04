@@ -26,17 +26,4 @@ class Enfermedad:
         self.name = nombre
         self.base_probability = probabilidad_inicial
         self.seasonality = estaciones_afectadas
-        self.contracted_on = None  # Added attribute to track the date of contracting
-
-    def calculate_probability(self, temperature, season):
-        # Check if the current season is affected by the disease
-        if season in self.estaciones_afectadas:
-            # Adjust the probability based on the season
-            if season == "Winter":
-                return self.probabilidad_inicial * 1.10
-            elif season == "Summer":
-                return self.probabilidad_inicial * 0.4
-            else:
-                return self.probabilidad_inicial
-        else:
-            return self.probabilidad_inicial
+        self.contracted_on = None

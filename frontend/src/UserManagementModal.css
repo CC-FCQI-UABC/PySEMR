@@ -12,11 +12,15 @@
   }
   
   .modal-content {
+    
     background-color: white;
-    padding: 20px;
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     width: 400px; /* You can adjust the width */
+  }
+
+  .modal-content button{
+    width: 100px;
   }
   
   h2 {
@@ -50,6 +54,7 @@
   }
   
   ul {
+
     list-style: none;
     padding: 0;
   }

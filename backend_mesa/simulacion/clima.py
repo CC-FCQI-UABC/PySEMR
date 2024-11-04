@@ -30,34 +30,16 @@ class Climate(Agent):
     def __init__(self, unique_id, model):
         super().__init__(unique_id, model)
         # Initialize the default temperature and season
-        self.temperature = 20
-        self.season = "Spring"
-        # Traffic level as an additional attribute
-        self.traffic_level = 0
+        pass
 
     # Define the step function for the Climate agent
     def step(self):
-        # Simulate seasonal changes and traffic
-        self.simulate_season_change()
-        self.simulate_traffic()
+        pass
 
     # Simulate the change of seasons and adjust the temperature accordingly
     def simulate_season_change(self):
-        seasons = ["Spring", "Summer", "Autumn", "Winter"]
-        current_season_index = seasons.index(self.season)
-        next_season_index = (current_season_index + 1) % len(seasons)
-        self.season = seasons[next_season_index]
-
-        # Adjust temperature based on the current season
-        if self.season == "Spring":
-            self.temperature = random.randint(15, 25)
-        elif self.season == "Summer":
-            self.temperature = random.randint(25, 35)
-        elif self.season == "Autumn":
-            self.temperature = random.randint(10, 20)
-        elif self.season == "Winter":
-            self.temperature = random.randint(0, 10)
+        pass
 
     # Simulate traffic levels randomly
     def simulate_traffic(self):
-        self.traffic_level = random.randint(0, 100)
+        pass

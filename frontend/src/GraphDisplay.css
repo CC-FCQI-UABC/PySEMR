@@ -1,0 +1,12 @@
+.graph-display {
+    max-width: 500px;
+    flex: 1;
+  }
+  
+  .graph-image {
+    width: 100%;
+    height: auto;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+  }
+  

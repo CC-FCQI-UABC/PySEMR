@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useLocation } from "react-router-dom";
 import ParameterForm from "./ParameterForm";
 import UserManagementModal from "./UserManagementModal";
+import GraphDisplay from "./GraphDisplay";
 import './Simulation.css';
 
 function Simulation() {
@@ -26,7 +27,10 @@ function Simulation() {
           </button>
         </div>
       )}
-      <ParameterForm />
+      <div className="parameter-graph-container">
+        <ParameterForm />
+        <GraphDisplay/>
+      </div>
       {isModalOpen && (
         <UserManagementModal onClose={handleCloseModal} />
       )}

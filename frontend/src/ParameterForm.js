@@ -2,8 +2,8 @@ import { useState } from "react";
 import './ParameterForm.css';
 
 function ParameterForm() {
-  const [param1, setParam1] = useState('');
-  const [param2, setParam2] = useState('');
+  const [PacientesPorDia, setPacientesPorDia] = useState('');
+  const [Dias, setDias] = useState('');
   const [param3, setParam3] = useState('');
   const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -13,7 +13,7 @@ function ParameterForm() {
     event.preventDefault();
     setLoading(true); 
     setShowModal(true);
-    const pacientesPorDia = parseInt(param1, 10);
+    const pacientesPorDia = parseInt(PacientesPorDia, 10);
 
     if (isNaN(pacientesPorDia) || pacientesPorDia <= 0) {
       console.error('Por favor, ingresa un número válido de pacientes por día.');
@@ -24,7 +24,7 @@ function ParameterForm() {
 
     const parameters = {
       pacientes_por_dia: pacientesPorDia,
-      parameter2: param2,
+      dias: parseInt(Dias),
       parameter3: param3,
     };
 
@@ -58,28 +58,41 @@ function ParameterForm() {
     setResult(null); 
   };
 
+  const estaciones = [
+    { value: '91', label: 'Invierno' },
+    { value: '182', label: 'Primavera' },
+    { value: '273', label: 'Verano' },
+    { value: '365', label: 'Otoño' },
+  ];
+  
   return (
     <div className="simulation-container">
       <div className="ParameterForm">
         <h2>Enviar Parámetros</h2>
         <form onSubmit={handleSubmit}>
           <div>
-            <label htmlFor="param1">Pacientes por día:</label>
+            <label htmlFor="PacientesPorDia">Pacientes por día:</label>
             <input
               type="number"
-              id="param1"
-              value={param1}
-              onChange={(e) => setParam1(e.target.value)}
+              id="PacientesPorDia"
+              value={PacientesPorDia}
+              onChange={(e) => setPacientesPorDia(e.target.value)}
             />
           </div>
           <div>
-            <label htmlFor="param2">Parámetro 2:</label>
-            <input
-              type="text"
-              id="param2"
-              value={param2}
-              onChange={(e) => setParam2(e.target.value)}
-            />
+            <label htmlFor="Dias">La simulación recorre desde invierno hasta el otoño. Elige hasta que estación.</label>
+            <select
+              id="Dias"
+              value={Dias}
+              onChange={(e) => setDias(e.target.value)}
+            >
+              <option value="" disabled>Selecciona una estación</option>
+              {estaciones.map((estacion) => (
+                <option key={estacion.value} value={estacion.value}>
+                  {estacion.label}
+                </option>
+              ))}
+            </select>
           </div>
           <div>
             <label htmlFor="param3">Parámetro 3:</label>

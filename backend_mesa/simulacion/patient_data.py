@@ -39,54 +39,36 @@ class PatientData(Agent):
         self.diseases_contracted = []
         self.sick_status = False  # Indicates if the patient is sick
 
-    def step(self):
-        self.heal_diseases()
-        if not self.sick_status:
-            self.contract_disease()
+    def step(self, season):
+        if self.sick_status:
+            self.heal_diseases()
+        else:
+            self.contract_disease(season)
             
-    def contract_disease(self):
-        # Iterar sobre las enfermedades posibles para verificar si el paciente contrae alguna
-        for disease in self.model.possible_diseases:
-            probability = self.calculate_contraction_probability(disease)
+    def contract_disease(self, season):
+        # Simplified random chance of contracting a disease
+        if len(self.diseases_contracted) < 3:
+            probability = 0.01
+            if season == "Summer":
+                probability *= 1
+            elif season == "Spring":
+                probability *= 3
+            elif season == "Autumn":
+                probability *= 4
+            elif season == "Winter":
+                probability *= 7
             if random.random() < probability:
-                if disease not in self.diseases_contracted and len(self.diseases_contracted) < 3:
-                    disease.contracted_on = self.model.schedule.time
+                disease = random.choice(self.model.possible_diseases)
+                if disease not in self.diseases_contracted:
                     self.diseases_contracted.append(disease)
                     self.sick_status = True
                     self.model.enfermos.append(self)
-                break
-
-    def calculate_contraction_probability(self, disease):
-        # Base probability
-        base_probability = disease.base_probability
-        
-        # Modify probability based on climate and disease seasonality
-        if self.model.ambiente.climate.season in disease.seasonality:
-            base_probability *= 1.5  # Increased chance in relevant seasons
-        
-        # Adjust probability based on temperature
-        if self.model.ambiente.climate.temperature < 0:
-            base_probability *= 0.5  # Less chance of contraction in extreme cold
-        
-        # Adjust for existing diseases (e.g., weakened immune system)
-        if self.diseases_contracted:
-            base_probability *= (1 - 0.1 * len(self.diseases_contracted))  # Reduce by 10% for each contracted disease
-        
-        # Ensure the probability does not exceed 1
-        return min(base_probability, 1)
 
     def heal_diseases(self):
-        for disease in self.diseases_contracted:
-            healing_probability = self.calculate_healing_probability(disease)
-            if random.random() < healing_probability:
+        # Simplified random chance of healing from diseases
+        for disease in list(self.diseases_contracted):  # Iterate over a copy of the list
+            if random.random() < 0.2:  # 20% chance to heal from each disease
                 self.diseases_contracted.remove(disease)
-                if not self.diseases_contracted:
+                if not self.diseases_contracted:  # If no diseases remain
                     self.sick_status = False
-
-    def calculate_healing_probability(self, disease):
-        # Dynamic healing probability can depend on days since contracted
-        days = self.days_since_contracted(disease)
-        return max(0.1, 0.9 - (days / 365))  # Healing chance decreases over time
-
-    def days_since_contracted(self, disease):
-        return self.model.schedule.time - disease.contracted_on
+                    break
