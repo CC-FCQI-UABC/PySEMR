@@ -39,12 +39,19 @@ def run_simulation():
             "image_path": "seasonal_patient_counts.png"
         }
 
+
+
         # Devuelve la respuesta en formato JSON
         return jsonify(response_data), 200
 
     except Exception as e:
         print(f"Error: {e}")  # Para depuración
         return jsonify({"error": str(e)}), 500
+    
+@app.route('/download_files', methods=['GET'])
+def download_files(option):
+    if(option):
+        pass
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5001, debug=True)

@@ -98,14 +98,14 @@ def create_user():
         data = request.get_json()
         username = data.get('username')
         password = data.get('password')
+        user_type = data.get('user_type')
 
-        if not username or not password:
-            return jsonify({"message": "Username and password are required."}), 400
+        if not username or not password or not user_type:
+            return jsonify({"message": "Username,  and user_type are required."}), 400
 
-        # Begin a transaction
-        with engine.begin() as connection:  # This ensures that the transaction is committed
-            query = text("INSERT INTO users (username, password) VALUES (:username, :password)")
-            connection.execute(query, {"username": username, "password": password})
+        with engine.begin() as connection:
+            query = text("INSERT INTO users (username, password, user_type) VALUES (:username, :password, :user_type)")
+            connection.execute(query, {"username": username, "password": password, "user_type": user_type})
             
         return jsonify({"message": "User created successfully."}), 200
     except Exception as e:
@@ -123,6 +123,21 @@ def delete_user(username):
             return jsonify({"message": "User deleted successfully."}), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+    
+@app.route('/user_type/<string:username>', methods=['GET'])
+def get_user_type(username):
+    """GET user_type of a username."""
+    try:
+        with engine.begin() as connection:
+            query = text("SELECT user_type FROM users WHERE username = :username")
+            result = connection.execute(query, {"username": username})
+            if result.rowcount == 0:
+                return jsonify({"message": "User not found."}), 404
+            user_type = result.fetchone()[0]
+            return jsonify({"user_type": user_type}), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)

@@ -73,3 +73,20 @@
     background-color: #c82333;
   }
   
+  table td{
+    border: none;
+    width: 50%;
+    text-align: left;
+  }
+
+  table td > *{
+    align-items: left;
+  }
+
+  tr{
+    text-align: left;
+  }
+
+  select{
+    margin-bottom: 10px;
+  }
