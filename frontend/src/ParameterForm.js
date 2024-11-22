@@ -1,7 +1,7 @@
 import { useState } from "react";
 import './ParameterForm.css';
 
-function ParameterForm() {
+function ParameterForm({setData}) {
   const [PacientesPorDia, setPacientesPorDia] = useState('');
   const [Dias, setDias] = useState('');
   const [param3, setParam3] = useState('');
@@ -44,6 +44,7 @@ function ParameterForm() {
       const data = await response.json();
       console.log('Response:', data);
       setResult(data);  
+      setData(data);
       setLoading(false);
 
     } catch (error) {
@@ -68,7 +69,7 @@ function ParameterForm() {
   return (
     <div className="simulation-container">
       <div className="ParameterForm">
-        <h2>Enviar Parámetros</h2>
+        <h2>Enviar parámetros</h2>
         <form onSubmit={handleSubmit}>
           <div>
             <label htmlFor="PacientesPorDia">Pacientes por día:</label>

@@ -8,8 +8,9 @@ import './Simulation.css';
 function Simulation() {
   const location = useLocation();
   const username = location.state?.username;
-  const [userType, setUserType] = useState(null); // Guardamos el tipo de usuario aquí
+  const [userType, setUserType] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [data, setData] = useState([]);
 
   useEffect(() => {
     fetch(`http://localhost:5000/user_type/${username}`)
@@ -17,10 +18,10 @@ function Simulation() {
         if (!response.ok) {
           throw new Error('Error al obtener el tipo de usuario');
         }
-        return response.json(); // If the response is valid, parse it as JSON
+        return response.json();
       })
       .then((data) => {
-        setUserType(data.user_type); // Set the user_type state
+        setUserType(data.user_type);
       })
       .catch((error) => {
         console.error('Error fetching user type:', error);
@@ -38,22 +39,21 @@ function Simulation() {
   return (
     <div className="simulation-container">
       <div className="parameter-graph-container">
-      {userType && (userType !== "Alumno") && (
-  <div className="button">
-    <h3>Opciones</h3>
-    <button onClick={handleOpenModal}>
-      <p>Gestión de Usuarios</p>
-    </button>
-  </div>
-)}
+        {userType && (userType !== "Alumno") && (
+          <div className="button">
+            <h3>Opciones</h3>
+            <button onClick={handleOpenModal}>
+              <p>Gestión de Usuarios</p>
+            </button>
+          </div>
+        )}
 
-{userType && (userType !== "Profesor") && (
-  <>
-    <ParameterForm />
-    <GraphDisplay />
-  </>
-)}
-
+        {userType && (userType !== "Profesor") && (
+          <>
+            <ParameterForm setData={setData} />
+            <GraphDisplay data={data} />
+          </>
+        )}
       </div>
 
       {isModalOpen && <UserManagementModal onClose={handleCloseModal} />}

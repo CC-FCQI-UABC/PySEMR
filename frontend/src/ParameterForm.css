@@ -1,48 +1,6 @@
-.ParameterForm {
-  margin: 20px;
-  padding: 20px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-}
 
-.ParameterForm h2 {
-  margin-bottom: 15px;
-}
 
-.ParameterForm div {
-  margin-bottom: 10px;
-}
 
-.ParameterForm label {
-  display: block;
-  margin-bottom: 5px;
-}
-
-.ParameterForm input {
-  width: 100%;
-  padding: 8px;
-  border: 1px solid #ccc;
-  border-radius: 3px;
-}
-
-.ParameterForm button {
-  padding: 10px 15px;
-  background-color: #007bff;
-  color: white;
-  border: none;
-  border-radius: 3px;
-  cursor: pointer;
-}
-
-.ParameterForm button:hover {
-  background-color: #0056b3;
-}
-
-.simulation-container {
-  display: flex;
-  justify-content: flex-end; /* Mover el formulario y los resultados a la derecha */
-  padding: 20px;
-}
 
 .simulation-container {
   display: flex;
@@ -54,7 +12,6 @@
   width: 300px;
 }
 
-/* Estilos del modal */
 .modal {
   position: fixed;
   top: 0;

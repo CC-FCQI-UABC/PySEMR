@@ -72,3 +72,26 @@ class PatientData(Agent):
                 if not self.diseases_contracted:  # If no diseases remain
                     self.sick_status = False
                     break
+
+    def to_dict(self):
+        return {
+            "pid": self.unique_id,
+            "personal_data": {
+                "DOB": self.personal_data.DOB,
+                "sex": self.personal_data.sex,
+            },
+            "name_data": {
+                "first_name": self.name_data.fname,
+                "last_name": self.name_data.lname,
+            },
+            "address_data": {
+                "city": self.address_data.city,
+                "state": self.address_data.state,
+            },
+            "contact_data": {
+                "email": self.contact_data.email,
+                "phone": self.contact_data.phone_contact,
+            },
+            "diseases_contracted": [disease.name for disease in self.diseases_contracted],
+            "sick_status": self.sick_status,
+        }
