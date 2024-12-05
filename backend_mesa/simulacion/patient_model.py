@@ -1,27 +1,5 @@
-######################################################################
-## PythonSyntheticElectronicMedicalRecords 1.0
-## Modelo computacional de registros medicos electrónicos sintéticos 
-## en Python.
-######################################################################
-## This software are distributed using the Creative Commons Public
-## License "Attribution-NonCommercial-ShareAlike 4.0 International"
-## https://creativecommons.org/licenses/by-nc-sa/4.0/
-######################################################################
-## Author: Manuel Castañón Puga, Claudio Emiliano Palacio Martínez, 
-## Ricardo Fernando Rosales Cisneros, Carelia Guadalupe Gaxiola
-## Pacheco, Luis Enrique Palafox Maestre.
-## Copyright: Copyright 2024, Universidad Autónoma de Baja California.
-######################################################################
-## Credits: matplotlib, mesa, Flask, SQLAlchemy, Faker, requests, 
-## tqdm, pandas and click libraries.
-## License: CC BY-NC-SA 4.0
-## Version: 1.0.0
-## Mmaintainer: https://github.com/pugapuga.
-## Email: puga@uabc.edu.mx
-## Status: Released.
-######################################################################
-
-# patient_model.py
+from flask import Flask
+from flask_socketio import SocketIO, emit
 from mesa.time import RandomActivation
 from mesa import Model
 from patient_data import PatientData
@@ -29,11 +7,14 @@ from ambiente import Environment
 from enfermedad import Enfermedad
 from Dataset import Dataset
 import matplotlib
-matplotlib.use('Agg')  # Use a non-interactive backend
-
 import matplotlib.pyplot as plt
 import numpy as np
 import os
+
+matplotlib.use('Agg')  # Use a non-interactive backend
+
+app = Flask(__name__)
+socketio = SocketIO(app)
 
 class PatientModel(Model):
     def __init__(self, Dataset):
@@ -59,7 +40,6 @@ class PatientModel(Model):
         }
 
     def run_simulation(self, parameters):
-        # Ejecuta la simulación durante 365 días
         season = ""
         for day in range(parameters['dias']):
             print(f"Day {day + 1}")
@@ -72,17 +52,16 @@ class PatientModel(Model):
             elif (275 <= day <= 365):
                 season = "Autumn"
             self.step(parameters, season)  # Ejecutar un paso del modelo
-        
+            
+            # Emitir los datos a través de WebSocket
+            socketio.emit('update', self.get_seasonal_counts())
+
         self.plot_seasonal_data()  # Graficar los resultados al final de la simulación
         return self.patients  # Retorna la lista de pacientes
     
     def step(self, parameters, season):
         try:
             self.add_random_patients(parameters["pacientes_por_dia"])  # Agregar pacientes aleatorios
-            
-            # Impresión de depuración
-            print(f"Total pacientes después de agregar: {len(self.patients)}")
-            
             self.update_seasonal_counts(season)  # Actualizar los conteos estacionales
             for patient in self.patients:
                 patient.step(season)  # Ejecutar paso del paciente
@@ -107,21 +86,18 @@ class PatientModel(Model):
 
     def update_seasonal_counts(self, season):
         # Actualiza el conteo de pacientes enfermos por estación
-
         self.season_counts[season] = sum(1 for patient in self.patients if patient.sick_status)
-        
-        print(f"Pacientes totales: {len(self.patients)}")
-        print(f"Pacientes enfermos: {sum(1 for p in self.enfermos)}")
-        print(f"Pacientes enfermos: {sum(1 for p in self.patients if p.sick_status == True)}")
-        print(f"Estación actual: {season}")
 
+    def get_seasonal_counts(self):
+        # Return the data to be sent to the frontend
+        return {
+            "season_counts": self.season_counts
+        }
 
     def plot_seasonal_data(self):
         # Graficar los resultados de la simulación
         seasons = list(self.season_counts.keys())
         counts = list(self.season_counts.values())
-        print(seasons)
-        print(counts)
 
         plt.bar(seasons, counts, color=['blue', 'green', 'yellow', 'orange'])
         plt.title("Number of patients sick throughout the year according to each season")
@@ -143,3 +119,16 @@ class PatientModel(Model):
 
         print(f"Imagen guardada en: {image_path}")
         return image_path  # Retornar la ruta de la imagen para que el frontend la use
+
+# Setup WebSocket server
+@socketio.on('connect')
+def handle_connect():
+    print("Client connected")
+
+@socketio.on('disconnect')
+def handle_disconnect():
+    print("Client disconnected")
+
+if __name__ == '__main__':
+    # Running the Flask app with WebSocket support
+    socketio.run(app, host='0.0.0.0', port=5002)
